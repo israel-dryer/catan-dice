@@ -1,0 +1,7 @@
+{
+  "name": "Settlers Dice",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
