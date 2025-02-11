@@ -11,12 +11,13 @@ import {
   IonTitle, IonToggle,
   IonToolbar
 } from '@ionic/angular/standalone';
-import {Settings} from "../../shared/types";
+import {Player, Settings} from "../../shared/types";
 import {SettingsService} from "../settings.service";
 import {liveQuery} from "dexie";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {addIcons} from "ionicons";
-import {dice, people, server} from "ionicons/icons";
+import {dice, people, server, statsChart} from "ionicons/icons";
+import {PlayerService} from "../../player/player.service";
 
 @Component({
   selector: 'app-app-settings',
@@ -28,15 +29,21 @@ import {dice, people, server} from "ionicons/icons";
 export class AppSettingsPage implements OnInit {
 
   settings?: Settings;
+  userPlayer?: Player;
+
+  readonly router = inject(Router);
+  readonly playerService = inject(PlayerService);
   readonly settingsService = inject(SettingsService);
 
   constructor() {
-    addIcons({dice, people, server})
+    addIcons({dice, people, server, statsChart})
   }
 
   ngOnInit() {
     liveQuery(() => this.settingsService.getSettings())
       .subscribe(settings => this.settings = settings);
+    liveQuery(() => this.playerService.getUserPlayer())
+      .subscribe(player => this.userPlayer = player);
   }
 
   handleSettingsChange(setting: string, event: any) {
@@ -47,5 +54,11 @@ export class AppSettingsPage implements OnInit {
       this.settingsService.updateSettings(changes);
     }
   }
+
+  async handleMyStatsClicked() {
+    this.playerService.setActivePlayer(this.userPlayer!);
+    await this.router.navigate(['/player-detail']);
+  }
+
 
 }

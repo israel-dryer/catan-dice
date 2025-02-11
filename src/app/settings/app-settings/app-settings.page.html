@@ -27,6 +27,10 @@
       <ion-icon slot="start" aria-hidden="true" name="server"></ion-icon>
       <ion-label>Storage</ion-label>
     </ion-item>
+    <ion-item *ngIf="userPlayer" detail (click)="handleMyStatsClicked()">
+      <ion-icon slot="start" aria-hidden="true" name="stats-chart"></ion-icon>
+      <ion-label>My Stats</ion-label>
+    </ion-item>
   </ion-list>
 
   @if (settings) {
