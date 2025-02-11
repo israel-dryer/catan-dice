@@ -19,7 +19,11 @@
     </ion-toolbar>
   </ion-header>
 
+
   <ion-list inset>
+    <ion-item *ngIf="players.length === 0">
+      <ion-text>Create some players</ion-text>
+    </ion-item>
     @for (player of players; track player.id) {
       <ion-item detail (click)="setupPlayerDetail(player)">
         <div style="display: flex; gap: .5rem">
