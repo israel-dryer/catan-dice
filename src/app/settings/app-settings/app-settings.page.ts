@@ -2,6 +2,8 @@ import {Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
+  IonBackButton,
+  IonButtons,
   IonContent,
   IonHeader, IonIcon,
   IonItem,
@@ -24,7 +26,7 @@ import {PlayerService} from "../../player/player.service";
   templateUrl: './app-settings.page.html',
   styleUrls: ['./app-settings.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, RouterLink, IonListHeader, IonLabel, IonToggle, IonIcon]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, RouterLink, IonListHeader, IonLabel, IonToggle, IonIcon, IonButtons, IonBackButton]
 })
 export class AppSettingsPage implements OnInit {
 
