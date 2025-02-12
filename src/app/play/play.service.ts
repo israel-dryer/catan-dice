@@ -62,6 +62,7 @@ export class PlayService {
     const changes: Record<string, any> = {};
 
     if (this.activeGame) {
+      const playerIds = this.activeGame.roster.map(x => x.id);
       const completedOn = new Date();
       const createdOn = new Date(this.activeGame.createdOn);
       changes['completedOn'] = completedOn.valueOf();
@@ -71,8 +72,10 @@ export class PlayService {
         changes['winnerName'] = winner.name;
       }
       this.gameService.updateGame(this.activeGame.id!, changes);
+      for (const id of playerIds) {
+        await this.statisticService.updatePlayerStatsById(id);
+      }
     }
-
 
     // reset game state
     this.activeGame = undefined;
