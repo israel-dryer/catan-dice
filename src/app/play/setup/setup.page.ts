@@ -2,22 +2,20 @@ import {Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
-  IonAccordion,
-  IonAccordionGroup,
-  IonAlert, IonBackButton, IonBadge,
+  IonAlert, IonBackButton,
   IonButton, IonButtons,
   IonCheckbox,
   IonContent,
   IonHeader,
   IonItem, IonLabel,
-  IonList, IonListHeader,
+  IonList,
   IonTitle,
   IonToggle,
   IonToolbar
 } from '@ionic/angular/standalone';
 import {PlayService} from "../play.service";
 import {PlayerService} from "../../player/player.service";
-import {Player, RosterPlayer, Settings} from "../../shared/types";
+import {Player, RosterPlayer} from "../../shared/types";
 import {liveQuery} from "dexie";
 import {SettingsService} from "../../settings/settings.service";
 import {state} from "@angular/animations";
@@ -29,7 +27,7 @@ import {Router} from "@angular/router";
   templateUrl: './setup.page.html',
   styleUrls: ['./setup.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonCheckbox, IonItem, IonToggle, IonButton, IonListHeader, IonLabel, IonAlert, IonAccordionGroup, IonAccordion, IonBadge, IonButtons, IonBackButton]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonCheckbox, IonItem, IonToggle, IonButton, IonLabel, IonAlert, IonButtons, IonBackButton]
 })
 export class SetupPage implements OnInit {
 

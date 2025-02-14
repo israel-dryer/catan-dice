@@ -30,6 +30,9 @@ export class GameHistogramComponent implements OnInit {
   filteredRolls: number[] = [];
   roster: string[] = [];
 
+  // TODO the histogram is not being updated when new rolls are created because the input is not response.
+  // TODO Try using a signal based input instead and then you can subscribe to it.
+
   ngOnInit() {
     this.roster = this.game.roster.map(x => x.name);
     this.baseHistogram = this.game.histogram;

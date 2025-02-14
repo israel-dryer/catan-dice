@@ -16,8 +16,6 @@ import {Player, Settings} from "../../shared/types";
 import {SettingsService} from "../settings.service";
 import {liveQuery} from "dexie";
 import {Router, RouterLink} from "@angular/router";
-import {addIcons} from "ionicons";
-import {dice, people, server, statsChart} from "ionicons/icons";
 import {PlayerService} from "../../player/player.service";
 
 @Component({
@@ -37,7 +35,7 @@ export class AppSettingsPage implements OnInit {
   readonly settingsService = inject(SettingsService);
 
   constructor() {
-    addIcons({dice, people, server, statsChart})
+
   }
 
   ngOnInit() {

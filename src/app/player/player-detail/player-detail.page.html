@@ -2,7 +2,7 @@
   <!-- Standard Toolbar -->
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button icon="back"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ player?.name }}</ion-title>
     <ion-buttons *ngIf="player" slot="end">
@@ -13,7 +13,7 @@
         <ion-icon size="small" slot="icon-only" [name]="player.isUser ? 'bookmark' : 'bookmark-outline'"></ion-icon>
       </ion-button>
       <ion-button (click)="showEditPlayerNameDialog()">
-        <ion-icon size="small" slot="icon-only" name="pencil"></ion-icon>
+        <ion-icon size="small" slot="icon-only" name="edit"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

@@ -13,7 +13,7 @@ import {
 import {PlayerService} from "../player.service";
 import {Player} from "../../shared/types";
 import {addIcons} from "ionicons";
-import {bookmark, bookmarkOutline, pencil, trash} from "ionicons/icons";
+import {bookmark, bookmarkOutline} from "ionicons/icons";
 import {Router} from "@angular/router";
 import {PlayerSummaryComponent} from "../components/player-summary/player-summary.component";
 import {PlayerHistogramComponent} from "../components/player-histogram/player-histogram.component";
@@ -33,7 +33,6 @@ export class PlayerDetailPage implements OnInit {
   player?: Player
 
   constructor() {
-    addIcons({pencil, bookmark, bookmarkOutline, trash});
   }
 
   ngOnInit(): void {

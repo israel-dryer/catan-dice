@@ -19,8 +19,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {GameSummaryComponent} from "../components/game-summary/game-summary.component";
 import {GameRollsComponent} from "../components/game-rolls/game-rolls.component";
 import {GameHistogramComponent} from "../components/game-histogram/game-histogram.component";
-import {addIcons} from "ionicons";
-import {trash} from "ionicons/icons";
 import {liveQuery} from "dexie";
 import {StatisticsService} from "../../shared/statistics.service";
 
@@ -44,14 +42,16 @@ export class GameDetailPage implements ViewWillEnter, OnInit {
   readonly statisticService = inject(StatisticsService);
 
   constructor() {
-    addIcons({trash});
+
   }
 
   ngOnInit() {
     this.activeRoute.queryParamMap.subscribe(param => {
       this.showSummary = param.get('summary') !== 'false'
     });
+
     this.activeGame = this.gameService.getActiveGame();
+
     liveQuery(() => this.gameService.getRollsByGameId(this.activeGame!.id!))
       .subscribe(rolls => {
         const _rolls = rolls;

@@ -7,7 +7,7 @@ import {
   IonContent,
   IonHeader,
   IonTitle,
-  IonToolbar
+  IonToolbar, Platform
 } from '@ionic/angular/standalone';
 import {PlayService} from '../play.service';
 import {ActionSheetButton, AlertInput} from "@ionic/angular";
@@ -25,13 +25,21 @@ export class PlaygroundPage {
   readonly alertController = inject(AlertController);
   readonly playService = inject(PlayService);
   readonly router = inject(Router);
+  readonly platform = inject(Platform);
 
-  actionSheetButtons: ActionSheetButton[] = [
-    {text: 'Undo Roll', data: {action: 'undo'}},
-    {text: 'End Game', data: {action: 'end'}},
-    {text: 'Settings', data: {action: 'settings'}},
-    {text: 'Cancel', role: 'cancel', data: {action: 'cancel'}}
-  ];
+  isIos: boolean;
+  actionSheetButtons: ActionSheetButton[];
+
+  constructor() {
+    this.isIos = this.platform.is('ios');
+    this.actionSheetButtons = [
+      {text: 'Undo Roll', data: {action: 'undo'}, icon: this.isIos ? undefined : 'undo'},
+      {text: 'End Game', data: {action: 'end'}, icon: this.isIos ? undefined : 'trophy'},
+      {text: 'Settings', data: {action: 'settings'}, icon: this.isIos ? undefined : 'settings'},
+      {text: 'Cancel', role: 'cancel', data: {action: 'cancel'}, icon: this.isIos ? undefined : 'close'}
+    ];
+  }
+
 
   async rollDice(alchemyDice?: any) {
     this.playService.playSoundRollingDice();
