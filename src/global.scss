@@ -38,7 +38,7 @@
 .sd-list-section {
   border-radius: .5rem;
   overflow: hidden;
-  border: 1px solid var(--ion-color-light-shade);
+
 }
 
 .md .sd-tabs-border {
@@ -49,4 +49,8 @@
   .md .sd-tabs-border {
     border-bottom: 1px solid var(--ion-background-color-step-150);
   }
+}
+
+.md ion-button {
+  --border-radius: 8px;
 }

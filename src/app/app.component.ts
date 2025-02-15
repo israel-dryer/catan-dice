@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import {Component, inject, OnInit} from '@angular/core';
+import {IonApp, IonRouterOutlet, Platform} from '@ionic/angular/standalone';
 import {EdgeToEdge} from "@capawesome/capacitor-android-edge-to-edge-support";
 import {addIcons} from "ionicons";
-import {dice} from "ionicons/icons";
+import {chevronBack} from "ionicons/icons";
+import {StatusBar} from "@capacitor/status-bar";
 
 @Component({
   selector: 'app-root',
@@ -11,24 +12,18 @@ import {dice} from "ionicons/icons";
 })
 export class AppComponent implements OnInit {
 
+  readonly platform = inject(Platform);
 
   async ngOnInit() {
     await this.initialize();
-    // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    //
-    // if (prefersDark.matches) {
-    //   EdgeToEdge.setBackgroundColor({color: '#1f1f1f'}).then();
-    // } else {
-    //   EdgeToEdge.setBackgroundColor({color: '#fff'}).then();
-    // }
-    //
-    // prefersDark.addEventListener('change', (mediaQuery) => {
-    //   if (mediaQuery.matches) {
-    //     EdgeToEdge.setBackgroundColor({color: '#1f1f1f'}).then();
-    //   } else {
-    //     EdgeToEdge.setBackgroundColor({color: '#fff'}).then();
-    //   }
-    // });
+
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
+    try {
+      EdgeToEdge.setBackgroundColor({color}).then();
+      await StatusBar.setBackgroundColor({color})
+    } catch (e) {
+      // not supported
+    }
   }
 
   async initialize() {
@@ -70,7 +65,7 @@ export class AppComponent implements OnInit {
       'restore': 'assets/svg/sd-database-restore.svg',
       'friend-list': 'assets/svg/sd-friend-list.svg',
       'checkmark': 'assets/svg/sd-checkmark.svg',
-      'back': 'assets/svg/sd-back.svg',
+      'back': this.platform.is('ios') ? chevronBack : 'assets/svg/sd-back.svg',
       'notification': 'assets/svg/sd-notification.svg',
       'chat': 'assets/svg/sd-chat.svg',
       'menu': 'assets/svg/sd-menu.svg',

@@ -1,5 +1,13 @@
 export type Bool = 0 | 1;
 
+export enum ActionDiceImage {
+  BARBARIAN = 'assets/images/cities-knights-barbarian.svg',
+  BLUE = 'assets/images/cities-knights-blue.svg',
+  GOLD = 'assets/images/cities-knights-gold.svg',
+  GREEN = 'assets/images/cities-knights-green.svg',
+}
+
+
 export interface Histogram {
   [index: number]: number;
 
@@ -79,8 +87,8 @@ export interface Settings {
 }
 
 export enum ActionDiceResult {
-  RED = "Red",
-  GRN = "Grn",
-  BLU = "Blu",
-  BAR = "Bar"
+  BARBARIAN = "Bar",
+  BLUE = "Blu",
+  GREEN = "Grn",
+  GOLD = "Gld"
 }

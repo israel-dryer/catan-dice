@@ -3,24 +3,71 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
   AlertController, IonActionSheet,
-  IonButton,
-  IonContent,
-  IonHeader,
+  IonButton, IonButtons,
+  IonContent, IonFooter,
+  IonHeader, IonIcon, IonLabel, IonModal, IonNote, IonText,
   IonTitle,
-  IonToolbar, Platform
+  IonToolbar, Platform, ViewWillLeave
 } from '@ionic/angular/standalone';
 import {PlayService} from '../play.service';
-import {ActionSheetButton, AlertInput} from "@ionic/angular";
+import {ActionSheetButton, AlertInput, ViewWillEnter} from "@ionic/angular";
 import {Router, RouterLink} from "@angular/router";
+import {BarbarianTrackComponent} from "../components/barbarian-track/barbarian-track.component";
+import {StandardDieComponent} from "../components/standard-die/standard-die.component";
+import {ActionDieComponent} from "../components/action-die/action-die.component";
+import {AlchemyPickerComponent} from "../components/alchemy-picker/alchemy-picker.component";
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
+import {EdgeToEdge} from "@capawesome/capacitor-android-edge-to-edge-support";
+import {StatusBar} from "@capacitor/status-bar";
+
+const ROLL_DURATION = 750;
 
 @Component({
   selector: 'app-playground',
   templateUrl: './playground.page.html',
   styleUrls: ['./playground.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonActionSheet, RouterLink]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonActionSheet, RouterLink, IonIcon, IonText, IonFooter, BarbarianTrackComponent, StandardDieComponent, ActionDieComponent, IonLabel, AlchemyPickerComponent, IonButtons, IonModal, IonNote],
+  animations: [
+    trigger('jiggleRed', [
+      state('active', style({})),
+      transition('* => active', [
+        animate(
+          `${ROLL_DURATION}ms`,
+          keyframes([
+            style({transform: 'translate3d(0, 0, 0) rotate(0deg)'}),
+            style({transform: 'translate3d(-1px, 0, 0) rotate(-5deg)'}),
+            style({transform: 'translate3d(2px, 0, 0) rotate(0deg)'}),
+            style({transform: 'translate3d(-4px, 0, 0)'}),
+            style({transform: 'translate3d(4px, 0, 0) rotate(5deg)'}),
+            style({transform: 'translate3d(1px, 0, 0) rotate(5deg)'}),
+            style({transform: 'translate3d(-2px, 0, 0) rotate(0deg)'}),
+            style({transform: 'translate3d(0, 0, 0)'}),
+          ]),
+        ),
+      ]),
+    ]),
+    trigger('jiggleGold', [
+      state('active', style({})),
+      transition('* => active', [
+        animate(
+          `${ROLL_DURATION}ms`,
+          keyframes([
+            style({transform: 'translate3d(0, 0, 0) rotate(0deg)'}),
+            style({transform: 'translate3d(1px, 0, 0) rotate(5deg)'}),
+            style({transform: 'translate3d(-2px, 0, 0) rotate(0deg)'}),
+            style({transform: 'translate3d(4px, 0, 0)'}),
+            style({transform: 'translate3d(-4px, 0, 0) rotate(-5deg)'}),
+            style({transform: 'translate3d(1px, 0, 0) rotate(5deg)'}),
+            style({transform: 'translate3d(-2px, 0, 0) rotate(0deg)'}),
+            style({transform: 'translate3d(0, 0, 0)'}),
+          ]),
+        ),
+      ]),
+    ]),
+  ]
 })
-export class PlaygroundPage {
+export class PlaygroundPage implements ViewWillEnter, ViewWillLeave {
 
   readonly alertController = inject(AlertController);
   readonly playService = inject(PlayService);
@@ -34,14 +81,34 @@ export class PlaygroundPage {
     this.isIos = this.platform.is('ios');
     this.actionSheetButtons = [
       {text: 'Undo Roll', data: {action: 'undo'}, icon: this.isIos ? undefined : 'undo'},
-      {text: 'End Game', data: {action: 'end'}, icon: this.isIos ? undefined : 'trophy'},
+      {text: 'End Game', data: {action: 'end'}, icon: this.isIos ? undefined : 'medal'},
       {text: 'Settings', data: {action: 'settings'}, icon: this.isIos ? undefined : 'settings'},
       {text: 'Cancel', role: 'cancel', data: {action: 'cancel'}, icon: this.isIos ? undefined : 'close'}
     ];
   }
 
+  async ionViewWillEnter() {
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-surface-container-highest');
+    try {
+      EdgeToEdge.setBackgroundColor({color}).then();
+      await StatusBar.setBackgroundColor({color})
+    } catch (e) {
+      // not supported
+    }
+  }
+
+  async ionViewWillLeave() {
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
+    try {
+      EdgeToEdge.setBackgroundColor({color}).then();
+      await StatusBar.setBackgroundColor({color})
+    } catch (e) {
+      // not supported
+    }
+  }
 
   async rollDice(alchemyDice?: any) {
+    this.playService.isRolling.set(true);
     this.playService.playSoundRollingDice();
     await this.playService.rollDice(alchemyDice);
     if (this.playService.barbariansAttack) {
@@ -51,6 +118,8 @@ export class PlaygroundPage {
       this.playService.playSoundRobberLaugh();
       this.playService.resetRobberStealing();
     }
+    setTimeout(() => this.playService.isRolling.set(false), ROLL_DURATION);
+
   }
 
   async showAlchemyDialog() {
@@ -70,10 +139,11 @@ export class PlaygroundPage {
     await alert.present();
   }
 
-  async handleAlchemyDialogDidDismiss(event: any) {
-    if (event.role === 'submit') {
-      const dice1 = parseInt(event.data.values.dice1);
-      const dice2 = parseInt(event.data.values.dice2);
+  async handleAlchemyDialogDidDismiss({detail}: any) {
+    console.log(detail);
+    if (detail.role === 'confirm') {
+      const dice1 = parseInt(detail.data.dice1);
+      const dice2 = parseInt(detail.data.dice2);
       const alchemyDice = {dice1, dice2};
       await this.rollDice(alchemyDice);
     }
@@ -131,8 +201,8 @@ export class PlaygroundPage {
       value: {id: player.id, name: player.name},
     }));
     const alert = await this.alertController.create({
-      header: 'End Game',
-      message: 'Choose a winner (optional)',
+      header: 'Game Over?',
+      message: 'If you do not choose a winner, the game will be paused.',
       inputs: alertInputs,
       buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Ok', role: 'submit'}]
     });

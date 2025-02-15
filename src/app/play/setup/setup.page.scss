@@ -15,12 +15,6 @@
   --color: var(--ion-color-primary-contrast);
 }
 
-@media (prefers-color-scheme: dark) {
-  .s-section-header {
-    --background: var(--ion-background-color-step-100);
-  }
-}
-
 
  .md .s-selection-indicator {
   width: 19px;

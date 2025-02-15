@@ -1,0 +1,134 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0.5rem 1rem;
+  background-color: var(--ion-color-surface-container-highest);
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--ion-color-surface-container-highest);
+}
+
+.next-player {
+  display: flex;
+  flex-direction: column;
+}
+.prev-player {
+  display: flex;
+  flex-direction: column;
+}
+
+.picker-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  gap: 1rem;
+  box-sizing: border-box;
+  padding: 0.5rem;
+}
+
+.modal-content {
+  width: 300px;
+  height: 335px;
+}
+
+.sd-stats-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sd-play-container {
+  display: flex;
+  height: 100%;
+  gap: 2rem;
+  box-sizing: border-box;
+  padding: 1rem;
+  background-color: var(--ion-color-surface-bright);
+}
+
+.sd-dice-container {
+  grid-row: 1 / 4;
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 3rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.sd-alchemist-button {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: flex-start;
+  --background: var(--ion-color-secondary);
+}
+
+.sd-barbarian-track {
+  grid-column: 3;
+  grid-row: 1/4;
+  height: 85%;
+  align-self: center;
+}
+
+app-action-die,
+app-standard-die {
+  height: 40%;
+  max-height: calc(100vw - 130px);
+  max-width: calc(100vw - 130px);
+  width: auto;
+  aspect-ratio: 1;
+}
+
+.barbarian-dice {
+  height: 25%;
+  width: auto;
+}
+
+@media screen and (orientation: landscape) {
+  .sd-dice-container {
+    flex-direction: row;
+  }
+
+  app-action-die,
+  app-standard-die {
+    height: auto;
+    width: 30%;
+    max-height: calc(100vh - 130px);
+    max-width: calc(100vh - 130px);
+  }
+
+  .barbarian-dice {
+    height: auto;
+    width: 25%;
+  }
+
+  .center-roll-total {
+    font-size: 6vw;
+  }
+}
+
+.sd-alchemist-icon {
+  color: rgb(25, 174, 25);
+}
+
+@media (prefers-color-scheme: dark) {
+  .sd-alchemist-button {
+    --background: var(--ion-color-surface-container);
+  }
+  .sd-alchemist-icon {
+    color: rgb(41, 227, 41);
+  }
+  .sd-play-container {
+    background-color: var(--ion-color-surface-dim);
+  }
+}

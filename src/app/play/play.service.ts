@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {GameService} from "../game/game.service";
 import {SettingsService} from '../settings/settings.service';
 import {StatisticsService} from "../shared/statistics.service";
@@ -34,6 +34,7 @@ export class PlayService {
   barbariansAttack = false;
   robberStealing = false;
   canShowRobber = true;
+  isRolling = signal(false);
 
   constructor() {
     // set active game if screen is refreshed for some reason
@@ -117,7 +118,7 @@ export class PlayService {
 
     if (this.isCitiesKnights) {
       roll.action = this.nextCitiesKnightsActionRoll();
-      if (roll.action === ActionDiceResult.BAR) {
+      if (roll.action === ActionDiceResult.BARBARIAN) {
         this.barbarianCount++;
         if (this.barbarianCount > 6) {
           this.barbariansAttack = true;
@@ -212,7 +213,7 @@ export class PlayService {
     // update roll counts
     const rollCount = this.activeGame.rollCount - 1;
     let barbarianCount = this.activeGame.barbarianCount;
-    if (lastRoll.diceAction === ActionDiceResult.BAR) {
+    if (lastRoll.diceAction === ActionDiceResult.BARBARIAN) {
       barbarianCount -= 1;
     }
 

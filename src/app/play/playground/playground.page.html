@@ -1,32 +1,123 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>playground</ion-title>
-  </ion-toolbar>
+<ion-header class="ion-no-border">
+  <div class="header-row">
+    <div class="next-player ion-text-uppercase">
+      <ion-note class="ion-text-uppercase">Next</ion-note>
+      <ion-text style="font-size: 1rem; font-weight: bold;" color="primary">
+        {{ playService.nextPlayer?.name }}
+      </ion-text>
+    </div>
+    <div class="ion-text-center ion-text-uppercase" style="align-items: center; grid-column: 2">
+      <div style="font-size: 2rem; font-weight: bold">
+        {{ this.playService.diceTotal }}
+      </div>
+    </div>
+    <div class="prev-player ion-text-end ion-text-uppercase" style="grid-column: 3">
+      <ion-note>Prev</ion-note>
+      @if (playService.prevPlayer) {
+        <ion-text style="font-size: 1rem; font-weight: bold;">{{ playService.prevPlayer.name }}</ion-text>
+      }
+    </div>
+  </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">playground</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <div *ngIf="playService.diceTotal !== 0" style="text-align: center; font-size: 24px">
-    <div>{{ playService.diceTotal }}</div>
-    <div>{{ playService.diceActionResult }}</div>
+<ion-content>
+  <div *ngIf="playService.activeGame" class="sd-play-container">
+    @if (playService.isCitiesKnights) {
+      <!-- Alchemy Button & Modal -->
+      <ion-button id="present-alchemy-modal" class="sd-alchemist-button" size="large" shape="round">
+        <ion-icon slot="icon-only" name="flask" style="font-size: 2rem" color="success"></ion-icon>
+      </ion-button>
 
-  </div>
-  <div *ngIf="playService.activeGame">
-    <div style="display: flex; justify-content: space-between">
-      <div><span>Next:</span><span>{{ playService.nextPlayer?.name }}</span></div>
-      <div *ngIf="playService.prevPlayer"><span>Prev:</span><span>{{ playService.prevPlayer.name }}</span></div>
+      <ion-modal
+        #alchemyModal
+        (didDismiss)="handleAlchemyDialogDidDismiss($event)"
+        style="--height: auto; --width: auto; --border-radius: 8px"
+        trigger="present-alchemy-modal">
+        <ng-template>
+          <div class="modal-content">
+            <ion-header class="ion-no-border">
+              <ion-toolbar>
+                <ion-title>Alchemist</ion-title>
+                <ion-buttons slot="end">
+                  <ion-button (click)="alchemyModal.dismiss(null, 'cancel')">
+                    <ion-icon name="close"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding" style="box-sizing: border-box">
+              <div class="picker-container">
+                <app-alchemy-picker color="danger" #red></app-alchemy-picker>
+                <app-alchemy-picker color="warning" #gold></app-alchemy-picker>
+                <ion-button
+                  class="ion-margin picker-confirm"
+                  color="primary"
+                  role="button"
+                  size="large"
+                  (click)="alchemyModal.dismiss({ dice1: red.value, dice2: gold.value }, 'confirm')">
+                  <ion-label>Roll Action</ion-label>
+                </ion-button>
+              </div>
+            </ion-content>
+          </div>
+        </ng-template>
+      </ion-modal>
+    }
+
+    <div class="sd-dice-container" (click)="rollDice()">
+      <!-- Action die for Cities and Knights-->
+      <app-action-die
+        *ngIf="playService.isCitiesKnights"
+        [action]="playService.diceActionResult"
+        [@jiggleGold]="playService.isRolling() ? 'active' : ''"
+        [classList]="[playService.isCitiesKnights ? 'barbarian-dice' : '']"></app-action-die>
+
+      <!-- Standard dice-->
+      <app-standard-die
+        [number]="playService.dice1Result"
+        color="red"
+        [@jiggleRed]="playService.isRolling() ? 'active' : ''"
+        [classList]="[playService.isCitiesKnights ? 'barbarian-dice' : '']"></app-standard-die>
+      <app-standard-die
+        [number]="playService.dice2Result"
+        color="gold"
+        [@jiggleGold]="playService.isRolling() ? 'active' : ''"
+        [classList]="[playService.isCitiesKnights ? 'barbarian-dice' : '']"></app-standard-die>
     </div>
-    <ion-button (click)="rollDice()">Roll Dice</ion-button>
-    <ion-button id="show-action-sheet">Options</ion-button>
-    <ion-button (click)="showAlchemyDialog()">Alchemist</ion-button>
-    <ion-button [routerLink]="['/game-detail']" [queryParams]="{summary: false}">Game Stats</ion-button>
-  </div>
 
-  <ion-action-sheet trigger="show-action-sheet"
-                    (ionActionSheetDidDismiss)="handleActionSheetDidDismiss($event)"
-                    [buttons]="actionSheetButtons"/>
+    <!-- Barbarian Indicator for Cities and Knights-->
+    <app-barbarian-track
+      [barbarianAttack]="playService.barbariansAttack"
+      *ngIf="playService.isCitiesKnights"
+      class="sd-barbarian-track"
+      [barbarianCount]="playService.barbarianCount"></app-barbarian-track>
+  </div>
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="button-row">
+    <!-- Reports button-->
+    <ion-button fill="clear" color="secondary" [routerLink]="['/game-detail']" [queryParams]="{summary: false}"
+                aria-label="Show reports">
+      <ion-icon slot="icon-only" name="chart"></ion-icon>
+    </ion-button>
+    <!-- Game statistics-->
+    <ion-text *ngIf="playService.activeGame?.rollCount" color="secondary">{{ playService.activeGame?.rollCount | number }}
+      rolls
+    </ion-text>
+
+    <!--    @if (playService.activeGame) {-->
+    <!--      <ion-text *ngIf="game && game?.lastRoll" color="medium">-->
+    <!--        🕒 {{ minutesElapsed() | number: "2.0-0" }}:{{ secondsElapsed() | number: "2.0-0" }}-->
+    <!--      </ion-text>-->
+    <!--    }-->
+
+    <!-- Game settings button & action sheet-->
+    <ion-button fill="clear" color="secondary" id="present-settings" aria-label="App menu">
+      <ion-icon slot="icon-only" name="more"></ion-icon>
+    </ion-button>
+    <ion-action-sheet trigger="present-settings"
+                      (ionActionSheetDidDismiss)="handleActionSheetDidDismiss($event)"
+                      [buttons]="actionSheetButtons"/>
+  </div>
+</ion-footer>
