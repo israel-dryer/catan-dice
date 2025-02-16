@@ -64,6 +64,12 @@
             </ion-toggle>
           </ion-item>
           <ion-item>
+            <ion-toggle [checked]="settings.alchemyBubbles"
+                        (ionChange)="handleSettingsChange('alchemyBubbles', $event)">
+              Alchemy Bubbles
+            </ion-toggle>
+          </ion-item>
+          <ion-item>
             <ion-toggle [checked]="settings.gameOver" (ionChange)="handleSettingsChange('gameOver', $event)">Game Over
             </ion-toggle>
           </ion-item>

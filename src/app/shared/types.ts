@@ -81,6 +81,7 @@ export interface Settings {
   rollingDice: Bool;
   robberLaugh: Bool;
   barbarianAttack: Bool;
+  alchemyBubbles: Bool;
   gameOver: Bool;
   fairDice: Bool;
   rollHaptics: Bool;

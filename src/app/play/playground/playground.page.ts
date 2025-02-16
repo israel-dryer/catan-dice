@@ -127,11 +127,14 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
     await this.playService.playSoundRollingDice();
     await this.playService.rollDice(alchemyDice);
     if (this.playService.barbariansAttack) {
-      this.playService.playSoundBarbarianAttack();
+      await this.playService.playSoundBarbarianAttack();
       await this.showBarbarianAttackAlert();
     } else if (this.playService.robberStealing) {
-      this.playService.playSoundRobberLaugh();
+      await this.playService.playSoundRobberLaugh();
       this.playService.resetRobberStealing();
+    } else {
+      setTimeout(async () => await this.playService.announceRollResult(this.playService.diceTotal.toString()), 500);
+
     }
     setTimeout(() => this.playService.isRolling.set(false), ROLL_DURATION);
   }
@@ -146,7 +149,7 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
   }
 
   async showBarbarianAttackAlert() {
-    this.playService.playSoundBarbarianAttack();
+    await this.playService.playSoundBarbarianAttack();
     const alert = await this.alertController.create({
       header: 'ATTACK!',
       message: 'The barbarians are attacking!!!',

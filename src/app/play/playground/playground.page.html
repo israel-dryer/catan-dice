@@ -30,6 +30,7 @@
 
       <ion-modal
         #alchemyModal
+        (didPresent)="playService.playAlchemyBubbles()"
         (didDismiss)="handleAlchemyDialogDidDismiss($event)"
         style="--height: auto; --width: auto; --border-radius: 8px"
         trigger="present-alchemy-modal">

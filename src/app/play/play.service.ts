@@ -4,6 +4,7 @@ import {SettingsService} from '../settings/settings.service';
 import {StatisticsService} from "../shared/statistics.service";
 import {ActionDiceResult, Game, Roll, RosterPlayer} from "../shared/types";
 import {NativeAudio} from '@capgo/native-audio'
+import {TextToSpeech} from "@capacitor-community/text-to-speech";
 
 @Injectable({
   providedIn: 'root'
@@ -118,26 +119,6 @@ export class PlayService {
         await this.statisticService.updatePlayerStatsById(id);
       }
     }
-
-    // reset game state
-    // this.activeGame = undefined;
-    // this.roster = [];
-    // this.nextIndex = 0;
-    // this.prevIndex = 0;
-    // this.nextPlayer = undefined;
-    // this.prevPlayer = undefined;
-    // this.isCitiesKnights = false;
-    // this.useFairDice = false;
-    // this.fairDiceCollection = [];
-    // this.alchemyDice1 = 1;
-    // this.alchemyDice2 = 1;
-    // this.dice1Result = 0;
-    // this.dice2Result = 0;
-    // this.diceTotal = 0;
-    // this.canShowRobber = true;
-    // this.barbarianCount = 0;
-    // this.barbariansAttack = false;
-    // this.diceActionResult = undefined;
   }
 
   // Dice Roll Functions
@@ -355,5 +336,16 @@ export class PlayService {
     }
   }
 
+  async playAlchemyBubbles() {
+    try {
+      await NativeAudio.play({assetId: 'bubbles'});
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async announceRollResult(value: string) {
+    await TextToSpeech.speak({text: value});
+  }
 
 }

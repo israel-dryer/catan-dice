@@ -6,6 +6,7 @@ import {chevronBack, removeCircleOutline, trash} from "ionicons/icons";
 import {StatusBar} from "@capacitor/status-bar";
 import {Capacitor} from "@capacitor/core";
 import {NativeAudio} from "@capgo/native-audio";
+import {KeepAwake} from "@capacitor-community/keep-awake";
 
 
 @Component({
@@ -19,6 +20,8 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     await this.initialize();
+
+    // background & edge-to-edge
     const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
     if (Capacitor.isNativePlatform()) {
       if (this.platform.is('android')) {
@@ -26,7 +29,17 @@ export class AppComponent implements OnInit {
       }
       await StatusBar.setBackgroundColor({color})
     }
+
+    // sound assets
     await this.preloadSoundAssets();
+
+    // keep away
+    const keepAwakeSupported = await KeepAwake.isSupported();
+    if (keepAwakeSupported) {
+      await KeepAwake.keepAwake();
+    } else {
+      console.log('Keep Awake not supported');
+    }
   }
 
   async preloadSoundAssets() {
@@ -51,6 +64,12 @@ export class AppComponent implements OnInit {
     await NativeAudio.preload({
       assetId: 'game-over',
       assetPath: 'assets/sounds/game-over.mp4',
+      audioChannelNum: 1,
+      isUrl: false
+    });
+    await NativeAudio.preload({
+      assetId: 'bubbles',
+      assetPath: 'assets/sounds/bubbles.mp4',
       audioChannelNum: 1,
       isUrl: false
     });
