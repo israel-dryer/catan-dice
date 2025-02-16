@@ -20,9 +20,11 @@ export class StandardDieComponent  implements OnInit {
 
   ngOnInit() {
     this.red = getComputedStyle(document.documentElement).getPropertyValue(
+      // '--ion-color-surface',
       '--ion-color-danger'
     );
     this.gold = getComputedStyle(document.documentElement).getPropertyValue(
+      // '--ion-color-tertiary',
       '--ion-color-warning'
     );
     this.dieColor = this.color === 'red' ? this.red : this.gold;

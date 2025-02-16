@@ -2,7 +2,7 @@ import {inject, Injectable, signal} from '@angular/core';
 import {GameService} from "../game/game.service";
 import {SettingsService} from '../settings/settings.service';
 import {StatisticsService} from "../shared/statistics.service";
-import {ActionDiceResult, Game, RosterPlayer} from "../shared/types";
+import {ActionDiceResult, Game, Roll, RosterPlayer} from "../shared/types";
 
 @Injectable({
   providedIn: 'root'
@@ -16,20 +16,31 @@ export class PlayService {
 
   // Game State
   activeGame: Game | undefined;
+  activeGameRolls: Roll[] = [];
+
   roster: RosterPlayer[] = [];
+  fairDiceCollection: number[][] = [];
+
+  rollCount = 0;
   nextIndex = 0;
   prevIndex = 0;
   nextPlayer: RosterPlayer | undefined;
   prevPlayer: RosterPlayer | undefined;
-  fairDiceCollection: number[][] = [];
+
   alchemyDice1 = 1;
   alchemyDice2 = 1;
+
+  // dice results
+  lastRoll: Roll | undefined;
   dice1Result = 0;
   dice2Result = 0;
   diceTotal = 0;
   diceActionResult: ActionDiceResult | undefined;
+
+  // general state
   barbarianCount = 0;
   isCitiesKnights = false;
+
   useFairDice = false;
   barbariansAttack = false;
   robberStealing = false;
@@ -38,24 +49,52 @@ export class PlayService {
 
   constructor() {
     // set active game if screen is refreshed for some reason
-    const game = localStorage.getItem('activeGame');
-    if (game) {
-      const gameObject = JSON.parse(game) as Game;
-      this.startGame(gameObject);
+    this.gameService.getActiveGame().then(async game => {
+      if (game) {
+        await this.startGame(game);
+      }
+    });
+  }
+
+  async startGame(game: Game) {
+    this.activeGame = game;
+    await this.initializeGameData();
+    await this.updateLastRollData();
+  }
+
+  async updateLastRollData() {
+    if (this.activeGame?.id) {
+      this.activeGameRolls = await this.gameService.getRollsByGameId(this.activeGame.id);
+      this.rollCount = this.activeGameRolls.length;
+    }
+    this.lastRoll = this.activeGameRolls.at(-1);
+    if (this.lastRoll) {
+        this.prevPlayer = {id: this.lastRoll.playerId, name: this.lastRoll.playerName};
+        this.prevIndex = this.lastRoll.turnIndex;
+        this.diceTotal = this.lastRoll.total;
+        this.dice1Result = this.lastRoll.dice1;
+        this.dice2Result = this.lastRoll.dice2;
+        this.diceActionResult = this.lastRoll.diceAction;
     }
   }
 
-  startGame(game: Game) {
-    this.activeGame = game;
-    this.roster = game.roster;
-    this.nextIndex = game.turnIndex;
-    this.nextPlayer = game.roster[game.turnIndex];
+  async initializeGameData() {
+    const game = this.activeGame;
+    if (game) {
+      console.log(game);
+      this.roster = game.roster;
+      this.nextIndex = game.turnIndex;
+      this.nextPlayer = game.roster[game.turnIndex];
+      this.barbarianCount = game.barbarianCount;
 
-    this.isCitiesKnights = game.isCitiesKnights === 1;
-    this.canShowRobber = !(game.isCitiesKnights === 1);
-    this.useFairDice = game.useFairDice === 1;
-    if (this.useFairDice) {
-      this.generateFairDiceSet();
+      this.isCitiesKnights = game.isCitiesKnights === 1;
+      this.canShowRobber = !(game.isCitiesKnights === 1);
+      this.useFairDice = game.useFairDice === 1;
+      console.log('Barbarian Count initialized', this.barbarianCount);
+      // this will cause the fair dice to reset if continuing an existing game.
+      if (this.useFairDice) {
+        this.generateFairDiceSet();
+      }
     }
   }
 
@@ -68,6 +107,7 @@ export class PlayService {
       const createdOn = new Date(this.activeGame.createdOn);
       changes['completedOn'] = completedOn.valueOf();
       changes['duration'] = (completedOn.getTime() - createdOn.getTime()) / 1000;
+      changes['rollCount'] = this.rollCount;
       if (winner) {
         changes['winnerId'] = winner.id;
         changes['winnerName'] = winner.name;
@@ -79,25 +119,24 @@ export class PlayService {
     }
 
     // reset game state
-    this.activeGame = undefined;
-    this.roster = [];
-    this.nextIndex = 0;
-    this.prevIndex = 0;
-    this.nextPlayer = undefined;
-    this.prevPlayer = undefined;
-    this.isCitiesKnights = false;
-    this.useFairDice = false;
-    this.fairDiceCollection = [];
-    this.alchemyDice1 = 1;
-    this.alchemyDice2 = 1;
-    this.dice1Result = 0;
-    this.dice2Result = 0;
-    this.diceTotal = 0;
-    this.canShowRobber = true;
-    this.barbarianCount = 0;
-    this.barbariansAttack = false;
-    this.diceActionResult = undefined;
-
+    // this.activeGame = undefined;
+    // this.roster = [];
+    // this.nextIndex = 0;
+    // this.prevIndex = 0;
+    // this.nextPlayer = undefined;
+    // this.prevPlayer = undefined;
+    // this.isCitiesKnights = false;
+    // this.useFairDice = false;
+    // this.fairDiceCollection = [];
+    // this.alchemyDice1 = 1;
+    // this.alchemyDice2 = 1;
+    // this.dice1Result = 0;
+    // this.dice2Result = 0;
+    // this.diceTotal = 0;
+    // this.canShowRobber = true;
+    // this.barbarianCount = 0;
+    // this.barbariansAttack = false;
+    // this.diceActionResult = undefined;
   }
 
   // Dice Roll Functions
@@ -106,7 +145,7 @@ export class PlayService {
     const player = this.nextPlayer!;
     const game = this.activeGame!;
 
-    let roll: { dice1: number, dice2: number, action?: ActionDiceResult };
+    let roll: { dice1: number, dice2: number, action?: ActionDiceResult};
 
     if (alchemyDice !== undefined) {
       roll = {dice1: alchemyDice.dice1, dice2: alchemyDice.dice2};
@@ -131,17 +170,13 @@ export class PlayService {
       game.id!,
       player.id,
       player.name,
+      game.turnIndex,
       roll.dice1,
       roll.dice2,
       roll.action,
     )
 
     this.robberStealing = (lastRoll.total === 7 && this.canShowRobber);
-
-    this.dice1Result = roll.dice1;
-    this.dice2Result = roll.dice2;
-    this.diceTotal = roll.dice1 + roll.dice2;
-    this.diceActionResult = roll.action;
 
     this.updateNextTurnIndex();
     this.updateNextPlayer();
@@ -154,14 +189,14 @@ export class PlayService {
     const gameChanges = {
       lastRoll,
       turnIndex: this.nextIndex,
-      rollCount: game.rollCount + 1,
+      rollCount: this.rollCount,
       histogram: gameHistogram,
       duration,
       barbarianCount: this.barbarianCount,
     }
-    console.log(gameChanges);
     await this.gameService.updateGame(game.id!, gameChanges);
     this.activeGame = await this.gameService.getGame(game.id!);
+    await this.updateLastRollData();
   }
 
   resetRobberStealing() {
@@ -204,6 +239,7 @@ export class PlayService {
   }
 
   async undoLastRoll() {
+    console.log('Current roll count', this.rollCount);
     if (!this.activeGame?.lastRoll) return;  // no rolls to reverse
     const lastRoll = this.activeGame.lastRoll;
     // update histogram
@@ -211,7 +247,6 @@ export class PlayService {
     histogram[lastRoll.total] -= 1;
 
     // update roll counts
-    const rollCount = this.activeGame.rollCount - 1;
     let barbarianCount = this.activeGame.barbarianCount;
     if (lastRoll.diceAction === ActionDiceResult.BARBARIAN) {
       barbarianCount -= 1;
@@ -223,18 +258,21 @@ export class PlayService {
     await this.gameService.deleteRoll(lastRoll.id!);
     const newLastRoll = await this.gameService.getLastRollByGameId(this.activeGame?.id!);
     if (newLastRoll) {
-      this.updatePrevTurnIndex();
+      this.prevIndex = newLastRoll.turnIndex;
       this.prevPlayer = {id: newLastRoll.playerId, name: newLastRoll.playerName};
       const changes = {
         lastRoll: newLastRoll,
         turnIndex: this.nextIndex,
-        rollCount,
+        rollCount: this.rollCount,
         histogram,
         barbarianCount,
       }
       this.diceTotal = newLastRoll.total;
       await this.gameService.updateGame(this.activeGame.id!, changes);
+      this.activeGame = await this.gameService.getGame(this.activeGame.id!);
     }
+    await this.updateLastRollData();
+    console.log('Final roll count', this.rollCount, this.activeGame?.rollCount);
     return newLastRoll;
   }
 
@@ -256,17 +294,6 @@ export class PlayService {
       this.nextIndex = next;
     }
   }
-
-  updatePrevTurnIndex() {
-    const length = this.roster.length;
-    let prev = this.nextIndex - 1;
-    if (prev < 0) {
-      this.prevIndex = length - 1;
-    } else {
-      this.prevIndex = prev;
-    }
-  }
-
 
   // -- Sound Effects --
 

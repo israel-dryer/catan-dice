@@ -1,4 +1,4 @@
-import {Component, Input,} from '@angular/core';
+import {Component, Input, model,} from '@angular/core';
 import {Roll} from "../../../shared/types";
 import {NgIf} from "@angular/common";
 
@@ -13,6 +13,7 @@ import {NgIf} from "@angular/common";
 export class GameRollsComponent {
 
   @Input() isCitiesKnights = false;
-  @Input() rolls: Roll[] = [];
+  rolls = model<Roll[]>([]);
+
 
 }

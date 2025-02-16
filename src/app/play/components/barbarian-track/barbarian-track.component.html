@@ -1,26 +1,27 @@
 <div class="sg-track">
-  <ion-button [ngClass]="isActive(1) ? 'sg-active-button' : 'sg-inactive-button'"  shape="round" size="large">
-    @if (!isActive(1)) {
+  <ion-button [ngClass]="(barbarianCount >= 1 || barbarianAttack) ? 'sg-active-button' : 'sg-inactive-button'" shape="round" size="large">
+    @if ((barbarianCount >= 1 || barbarianAttack)) {
       <ion-icon size="large" slot="icon-only" name="viking-helmet"></ion-icon>
     } @else {
       <ion-icon size="large" slot="icon-only" name="viking-ship"></ion-icon>
     }
   </ion-button>
-  <div [ngClass]="['sg-line', isActive(1) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-circle', isActive(1) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-line', isActive(2) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-circle', isActive(2) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-line', isActive(3) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-circle', isActive(3) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-line', isActive(4) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-circle', isActive(4) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-line', isActive(5) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-circle', isActive(5) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-line', isActive(6) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-circle', isActive(6) ? 'sg-active' : 'sg-inactive']"></div>
-  <div [ngClass]="['sg-line', isActive(7) ? 'sg-active' : 'sg-inactive']"></div>
-  <ion-button [ngClass]="isActive(7) ? 'sg-active-button' : 'sg-inactive-button'" shape="round" size="large">
-    @if (!isActive(7)) {
+  <div [ngClass]="['sg-line', barbarianCount >= 1 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-circle', barbarianCount >= 1 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-line', barbarianCount >= 2 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-circle', barbarianCount >= 2 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-line', barbarianCount >= 3 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-circle', barbarianCount >= 3 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-line', barbarianCount >= 4 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-circle', barbarianCount >= 4 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-line', barbarianCount >= 5 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-circle', barbarianCount >= 5 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-line', barbarianCount >= 6 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-circle', barbarianCount >= 6 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <div [ngClass]="['sg-line', barbarianCount >= 7 || barbarianAttack ? 'sg-active' : 'sg-inactive']"></div>
+  <ion-button [ngClass]="barbarianCount >= 7 || barbarianAttack ? 'sg-active-button' : 'sg-inactive-button'"
+              shape="round" size="large">
+    @if (!(barbarianCount >= 7 || barbarianAttack)) {
       <ion-icon size="large" slot="icon-only" name="house"></ion-icon>
     } @else {
       <ion-icon size="large" slot="icon-only" name="burning-house"></ion-icon>

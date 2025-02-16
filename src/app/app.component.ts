@@ -2,8 +2,9 @@ import {Component, inject, OnInit} from '@angular/core';
 import {IonApp, IonRouterOutlet, Platform} from '@ionic/angular/standalone';
 import {EdgeToEdge} from "@capawesome/capacitor-android-edge-to-edge-support";
 import {addIcons} from "ionicons";
-import {chevronBack} from "ionicons/icons";
+import {chevronBack, removeCircleOutline, trash} from "ionicons/icons";
 import {StatusBar} from "@capacitor/status-bar";
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-root',
@@ -18,11 +19,11 @@ export class AppComponent implements OnInit {
     await this.initialize();
 
     const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
-    try {
-      EdgeToEdge.setBackgroundColor({color}).then();
+    if (Capacitor.isNativePlatform()) {
+      if (this.platform.is('android')) {
+        EdgeToEdge.setBackgroundColor({color}).then();
+      }
       await StatusBar.setBackgroundColor({color})
-    } catch (e) {
-      // not supported
     }
   }
 
@@ -54,7 +55,7 @@ export class AppComponent implements OnInit {
       'tune': 'assets/svg/sd-tune.svg',
       'flask': 'assets/svg/sd-test-tube.svg',
       'history': 'assets/svg/sd-history.svg',
-      'trash': 'assets/svg/sd-remove.svg',
+      'trash': this.platform.is('ios') ? removeCircleOutline : trash,
       'trophy': 'assets/svg/sd-trophy.svg',
       'undo': 'assets/svg/sd-undo.svg',
       'upload': 'assets/svg/sd-upload.svg',

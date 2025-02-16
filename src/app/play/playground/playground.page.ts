@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
@@ -19,6 +19,7 @@ import {AlchemyPickerComponent} from "../components/alchemy-picker/alchemy-picke
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {EdgeToEdge} from "@capawesome/capacitor-android-edge-to-edge-support";
 import {StatusBar} from "@capacitor/status-bar";
+import {Capacitor} from "@capacitor/core";
 
 const ROLL_DURATION = 750;
 
@@ -67,17 +68,24 @@ const ROLL_DURATION = 750;
     ]),
   ]
 })
-export class PlaygroundPage implements ViewWillEnter, ViewWillLeave {
+export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnDestroy {
 
   readonly alertController = inject(AlertController);
   readonly playService = inject(PlayService);
   readonly router = inject(Router);
   readonly platform = inject(Platform);
 
+  // time duration state
+  private readonly timerIntervalCallback?: any;
+  elapsedHours = 0;
+  elapsedMinutes = 0;
+  elapsedSeconds = 0;
+
   isIos: boolean;
   actionSheetButtons: ActionSheetButton[];
 
   constructor() {
+    this.timerIntervalCallback = setInterval(() => this.updateDurationDisplay(), 1000);
     this.isIos = this.platform.is('ios');
     this.actionSheetButtons = [
       {text: 'Undo Roll', data: {action: 'undo'}, icon: this.isIos ? undefined : 'undo'},
@@ -87,23 +95,31 @@ export class PlaygroundPage implements ViewWillEnter, ViewWillLeave {
     ];
   }
 
+  async ngOnInit() {
+    await this.playService.initializeGameData();
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timerIntervalCallback);
+  }
+
   async ionViewWillEnter() {
     const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-surface-container-highest');
-    try {
-      EdgeToEdge.setBackgroundColor({color}).then();
+    if (Capacitor.isNativePlatform()) {
+      if (this.platform.is('android')) {
+        EdgeToEdge.setBackgroundColor({color}).then();
+      }
       await StatusBar.setBackgroundColor({color})
-    } catch (e) {
-      // not supported
     }
   }
 
   async ionViewWillLeave() {
     const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
-    try {
-      EdgeToEdge.setBackgroundColor({color}).then();
+    if (Capacitor.isNativePlatform()) {
+      if (this.platform.is('android')) {
+        EdgeToEdge.setBackgroundColor({color}).then();
+      }
       await StatusBar.setBackgroundColor({color})
-    } catch (e) {
-      // not supported
     }
   }
 
@@ -119,7 +135,6 @@ export class PlaygroundPage implements ViewWillEnter, ViewWillLeave {
       this.playService.resetRobberStealing();
     }
     setTimeout(() => this.playService.isRolling.set(false), ROLL_DURATION);
-
   }
 
   async showAlchemyDialog() {
@@ -140,7 +155,6 @@ export class PlaygroundPage implements ViewWillEnter, ViewWillLeave {
   }
 
   async handleAlchemyDialogDidDismiss({detail}: any) {
-    console.log(detail);
     if (detail.role === 'confirm') {
       const dice1 = parseInt(detail.data.dice1);
       const dice2 = parseInt(detail.data.dice2);
@@ -161,7 +175,6 @@ export class PlaygroundPage implements ViewWillEnter, ViewWillLeave {
   }
 
   async handleActionSheetDidDismiss(event: any) {
-    console.log(event);
     const {data, role} = event.detail;
     if (role === 'backdrop' || role === 'cancel') {
       return;
@@ -218,5 +231,15 @@ export class PlaygroundPage implements ViewWillEnter, ViewWillLeave {
     await alert.present();
   }
 
+  updateDurationDisplay() {
+    const game = this.playService.activeGame;
+    if (!game) {
+      return;
+    }
+    const totalSeconds = (Date.now() - game.createdOn) / 1000;
+    this.elapsedHours = Math.floor(totalSeconds / 60 / 60);
+    this.elapsedMinutes = Math.floor(totalSeconds / 60);
+    this.elapsedSeconds = totalSeconds % 60;
+  }
 
 }

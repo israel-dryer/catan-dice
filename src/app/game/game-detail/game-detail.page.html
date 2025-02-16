@@ -2,10 +2,10 @@
   <!-- Standard Toolbar -->
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button icon="back"></ion-back-button>
+      <ion-back-button [defaultHref]="showSummary ? 'player-list' : 'playground'" icon="back"></ion-back-button>
     </ion-buttons>
     <ion-title>Game Details</ion-title>
-    <ion-buttons slot="end">
+    <ion-buttons *ngIf="showSummary" slot="end">
       <ion-button (click)="deleteGame()">
         <ion-icon slot="icon-only" name="trash"/>
       </ion-button>

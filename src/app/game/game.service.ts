@@ -11,17 +11,15 @@ export class GameService {
   _activeGame?: Game;
 
   constructor() {
-    const game = localStorage.getItem('activeGame');
-    if (game) {
-      this._activeGame = JSON.parse(game);
-    }
+    this.getActiveGame().then();
   }
 
-  getActiveGame() {
+  async getActiveGame() {
     if (!this._activeGame) {
-      const game = localStorage.getItem('activeGame');
-      if (!game) return;
-      this._activeGame = JSON.parse(game);
+      const jsonData = localStorage.getItem('activeGame');
+      if (!jsonData) return;
+      const game = JSON.parse(jsonData);
+      this._activeGame = await this.getGame(game.id!);
     }
     return this._activeGame;
   }
@@ -79,14 +77,15 @@ export class GameService {
     gameId: number,
     playerId: number,
     playerName: string,
+    turnIndex: number,
     dice1: number,
     dice2: number,
-    diceAction?: ActionDiceResult
+    diceAction?: ActionDiceResult,
   ) {
     const total = dice1 + dice2;
     const isRobber = total === 7 ? 1 : 0;
     const roll: Roll = {
-      gameId, playerId, playerName, dice1, dice2, total, diceAction, isRobber
+      gameId, playerId, playerName, turnIndex, dice1, dice2, total, diceAction, isRobber
     }
     roll.id = await db.rolls.add(roll);
     return roll;

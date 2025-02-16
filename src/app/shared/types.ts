@@ -54,7 +54,8 @@ export interface Roll {
   dice1: number;
   dice2: number;
   total: number;
-  isRobber: Bool
+  isRobber: Bool;
+  turnIndex: number;
 }
 
 export interface Game {

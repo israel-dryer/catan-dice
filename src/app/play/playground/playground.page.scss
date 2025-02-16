@@ -71,6 +71,11 @@
   grid-row: 1;
   align-self: flex-start;
   --background: var(--ion-color-secondary);
+
+  ion-icon {
+    font-size: 2rem; color: var(--ion-color-primary-container);
+  }
+
 }
 
 .sd-barbarian-track {
@@ -124,7 +129,12 @@ app-standard-die {
 @media (prefers-color-scheme: dark) {
   .sd-alchemist-button {
     --background: var(--ion-color-surface-container);
+
+    ion-icon {
+      color: var(--ion-color-on-surface-variant);
+    }
   }
+
   .sd-alchemist-icon {
     color: rgb(41, 227, 41);
   }

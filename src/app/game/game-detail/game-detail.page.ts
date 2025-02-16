@@ -45,16 +45,18 @@ export class GameDetailPage implements ViewWillEnter, OnInit {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.activeRoute.queryParamMap.subscribe(param => {
       this.showSummary = param.get('summary') !== 'false'
     });
 
-    this.activeGame = this.gameService.getActiveGame();
+    this.activeGame = await this.gameService.getActiveGame();
+    this.rolls = await this.gameService.getRollsByGameId(this.activeGame?.id!);
 
-    liveQuery(() => this.gameService.getRollsByGameId(this.activeGame!.id!))
-      .subscribe(rolls => {
-        const _rolls = rolls;
+    liveQuery(() => this.gameService.getGame(this.activeGame?.id!))
+      .subscribe(async game => {
+        this.activeGame = game;
+        const _rolls = await this.gameService.getRollsByGameId(game?.id!);
         // convert the id to a roll count then sort in reverse order.
         _rolls.forEach((r, index) => r.id = index + 1);
         _rolls.reverse();
@@ -62,8 +64,8 @@ export class GameDetailPage implements ViewWillEnter, OnInit {
       });
   }
 
-  ionViewWillEnter(): void {
-    this.activeGame = this.gameService.getActiveGame();
+  async ionViewWillEnter() {
+    this.activeGame = await this.gameService.getActiveGame();
   }
 
   async deleteGame() {

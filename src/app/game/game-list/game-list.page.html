@@ -20,6 +20,11 @@
         {{games.length | number}} games
       </ion-label>
     </ion-item>
+    <ion-item *ngIf="games.length === 0" lines="none">
+      <ion-label>
+        No games have been played.
+      </ion-label>
+    </ion-item>
     <ion-list>
       @for (game of games; track game.id) {
         <ion-item detail (click)="handleItemClicked(game)">
