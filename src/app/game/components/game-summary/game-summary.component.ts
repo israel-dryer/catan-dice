@@ -40,8 +40,8 @@ export class GameSummaryComponent  implements OnInit {
 
   async continueGame() {
     this.gameService.setActiveGame(this.game);
-    this.playService.startGame(this.game);
-    await this.router.navigate(['/playground']);
+    await this.playService.startGame(this.game);
+    await this.router.navigate(['/playground'], {replaceUrl: true});
   }
 
 }
