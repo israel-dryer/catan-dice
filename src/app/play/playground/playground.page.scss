@@ -23,6 +23,7 @@
   display: flex;
   flex-direction: column;
 }
+
 .prev-player {
   display: flex;
   flex-direction: column;
@@ -74,7 +75,8 @@
   --background: var(--ion-color-secondary);
 
   ion-icon {
-    font-size: 2rem; color: var(--ion-color-primary-container);
+    font-size: 2rem;
+    color: var(--ion-color-primary-container);
   }
 
 }
@@ -141,5 +143,12 @@ app-standard-die {
   }
   .sd-play-container {
     background-color: var(--ion-color-surface-dim);
+  }
+
+  .button-row {
+    background-color: var(--ion-color-surface-container-high);
+  }
+  .header-row {
+    background-color: var(--ion-color-surface-container-high);
   }
 }

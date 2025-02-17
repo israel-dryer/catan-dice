@@ -10,7 +10,7 @@ export class AppDb extends Dexie {
 
   constructor() {
     super('SettlersDiceDb');
-    this.version(4).stores({
+    this.version(5).stores({
       games: '++id,createdOn',
       players: '++id,[isUser+isActive],isUser,isActive',
       rolls: '++id,gameId,playerId',
@@ -19,14 +19,10 @@ export class AppDb extends Dexie {
     this.on('populate', () => {
       // add default settings
       this.settings.add({
-        rollingDice: 1,
-        robberLaugh: 1,
-        barbarianAttack: 1,
-        alchemyBubbles: 1,
-        gameOver: 1,
         fairDice: 1,
         rollHaptics: 1,
-        rollAnnouncer: 1
+        rollAnnouncer: 1,
+        soundEffects: 1
       });
     });
   }

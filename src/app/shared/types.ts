@@ -78,14 +78,10 @@ export interface Game {
 
 export interface Settings {
   id?: number;
-  rollingDice: Bool;
-  robberLaugh: Bool;
-  barbarianAttack: Bool;
-  alchemyBubbles: Bool;
-  gameOver: Bool;
   fairDice: Bool;
   rollHaptics: Bool;
   rollAnnouncer: Bool;
+  soundEffects: Bool;
 }
 
 export enum ActionDiceResult {

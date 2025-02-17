@@ -80,9 +80,11 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
   elapsedHours = 0;
   elapsedMinutes = 0;
   elapsedSeconds = 0;
-
+  headerColor: string;
+  backgroundColor: string;
   isIos: boolean;
   actionSheetButtons: ActionSheetButton[];
+  isDarkTheme: boolean;
 
   constructor() {
     this.timerIntervalCallback = setInterval(() => this.updateDurationDisplay(), 1000);
@@ -92,6 +94,13 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
       {text: 'End Game', data: {action: 'end'}, icon: this.isIos ? undefined : 'medal'},
       {text: 'Cancel', role: 'cancel', data: {action: 'cancel'}, icon: this.isIos ? undefined : 'close'}
     ];
+    this.isDarkTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    this.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
+    if (this.isDarkTheme) {
+      this.headerColor = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-surface-container-high');
+    } else {
+      this.headerColor = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-surface-container');
+    }
   }
 
   async ngOnInit() {
@@ -103,22 +112,20 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
   }
 
   async ionViewWillEnter() {
-    const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-surface-container');
     if (Capacitor.isNativePlatform()) {
       if (this.platform.is('android')) {
-        EdgeToEdge.setBackgroundColor({color}).then();
+        EdgeToEdge.setBackgroundColor({color: this.headerColor}).then();
       }
-      await StatusBar.setBackgroundColor({color})
+      await StatusBar.setBackgroundColor({color: this.headerColor});
     }
   }
 
   async ionViewWillLeave() {
-    const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
     if (Capacitor.isNativePlatform()) {
       if (this.platform.is('android')) {
-        EdgeToEdge.setBackgroundColor({color}).then();
+        EdgeToEdge.setBackgroundColor({color: this.backgroundColor}).then();
       }
-      await StatusBar.setBackgroundColor({color})
+      await StatusBar.setBackgroundColor({color: this.backgroundColor});
     }
   }
 

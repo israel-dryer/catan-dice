@@ -38,12 +38,14 @@
     --ion-color-outline-variant: #c3c8bc;
 
     // other
-    --ion-item-background: var(--ion-color-surface-container);
+    --ion-item-background: var(--ion-color-surface-container-high);
     --ion-border-color: var(--ion-color-outline-variant);
     --ion-item-border-color: var(--ion-color-outline-variant);
 
+    --ion-toolbar-color: --ion-color-surface-bright;
+
     ion-toolbar {
-      --background: var(--ion-color-surface);
+      --background: var(--ion-toolbar-color);
     }
 
 
@@ -192,15 +194,19 @@
     --ion-color-outline-variant: #43483f;
 
     // other
+    --ion-toolbar-color: --ion-color-surface-dim;
+
     ion-toolbar {
-      --background: var(--ion-color-background);
+      --background: var(--ion-toolbar-color);
     }
 
-    --ion-item-background: var(--ion-color-surface-container);
-    --ion-border-color: var(--ion-color-outline-variant);
-    --ion-item-border-color: var(--ion-color-outline-variant);
-    --ion-backdrop-color: var(--ion-color-surface);
-    --ion-backdrop-opacity: 0.5;
+    .md {
+      --ion-item-background: var(--ion-color-surface-container-high);
+      --ion-border-color: var(--ion-color-outline-variant);
+      --ion-item-border-color: var(--ion-color-outline-variant);
+      --ion-backdrop-color: var(--ion-color-surface);
+      --ion-backdrop-opacity: 0.5;
+    }
 
     .ios {
       --ion-toolbar-segment-background: var(--ion-color-surface-container-low);

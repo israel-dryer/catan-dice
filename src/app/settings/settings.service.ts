@@ -12,14 +12,10 @@ export class SettingsService {
 
   resetSettings() {
     return db.settings.update(1, {
-      rollingDice: 1,
-      robberLaugh: 1,
-      barbarianAttack: 1,
-      alchemyBubbles: 1,
-      gameOver: 1,
       fairDice: 1,
       rollHaptics: 1,
-      rollAnnouncer: 1
+      rollAnnouncer: 1,
+      soundEffects: 1
     });
   }
 

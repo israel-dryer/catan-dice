@@ -30,9 +30,6 @@ export class PlayService {
   nextPlayer: RosterPlayer | undefined;
   prevPlayer: RosterPlayer | undefined;
 
-  alchemyDice1 = 1;
-  alchemyDice2 = 1;
-
   // dice results
   lastRoll: Roll | undefined;
   dice1Result = 0;
@@ -286,7 +283,7 @@ export class PlayService {
   // -- Sound Effects --
 
   async playSoundRollingDice() {
-    if (!this.settings.rollingDice) return;
+    if (!this.settings.soundEffects) return;
     try {
       await NativeAudio.play({assetId: 'rolling-dice'});
     } catch (e) {
@@ -295,7 +292,7 @@ export class PlayService {
   }
 
   async playSoundRobberLaugh() {
-    if (!this.settings.robberLaugh) return;
+    if (!this.settings.soundEffects) return;
     try {
       await NativeAudio.play({assetId: 'robber-laugh'});
     } catch (e) {
@@ -305,7 +302,7 @@ export class PlayService {
 
 
   async playSoundGameOver() {
-    if (!this.settings.gameOver) return;
+    if (!this.settings.soundEffects) return;
     try {
       await NativeAudio.play({assetId: 'game-over'});
     } catch (e) {
@@ -331,7 +328,7 @@ export class PlayService {
   }
 
   async playSoundBarbarianAttack() {
-    if (!this.settings.barbarianAttack) return;
+    if (!this.settings.soundEffects) return;
     try {
       await NativeAudio.play({assetId: 'barbarian-attack'});
     } catch (e) {
@@ -340,7 +337,7 @@ export class PlayService {
   }
 
   async playAlchemyBubbles() {
-    if (!this.settings.alchemyBubbles) return;
+    if (!this.settings.soundEffects) return;
     try {
       await NativeAudio.play({assetId: 'bubbles'});
     } catch (e) {

@@ -44,13 +44,18 @@
       </ion-item>
       <ion-list lines="none">
         <ion-item>
-          <ion-toggle [checked]="useFairDice" (ionChange)="handleFairDiceChanged()">Use Fair Dice</ion-toggle>
+          <ion-toggle [checked]="isCitiesKnights" (ionChange)="handleCitiesKnightsChanged()">
+            Cities & Knights Expansion
+          </ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-toggle [checked]="isSeafarers" (ionChange)="handleSeafarersChanged()">Seafarers Expansion</ion-toggle>
+          <ion-toggle [checked]="isSeafarers" (ionChange)="handleSeafarersChanged()">
+            Seafarers Expansion
+          </ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-toggle [checked]="isCitiesKnights" (ionChange)="handleCitiesKnightsChanged()">Cities & Knights Expansion
+          <ion-toggle [checked]="useFairDice" (ionChange)="handleFairDiceChanged()">
+            Use Fair Dice
           </ion-toggle>
         </ion-item>
       </ion-list>
@@ -58,7 +63,9 @@
   </div>
 
   <div class="ion-padding">
-    <ion-button expand="block" [disabled]="selectedRosterIds.length < 2" (click)="startGame()">Start Game</ion-button>
+    <ion-button expand="block" [disabled]="selectedRosterIds.length < 2" (click)="startGame()">
+      Start Game
+    </ion-button>
   </div>
 
 </ion-content>
