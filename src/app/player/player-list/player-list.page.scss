@@ -1,0 +1,26 @@
+.sd-alert-card {
+  display: flex;
+  gap: .5rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--md-tertiaryContainer);
+  color: var(--md-onTertiaryContainer);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.sd-alert-text {
+  font-weight: bold;
+}
+
+:host {
+
+  ::ng-deep .sd-alert-icon {
+    font-size: 28px;
+  }
+
+}
+

@@ -15,7 +15,7 @@ import {PlayerService} from "../player.service";
 import {Player} from "../../shared/types";
 import {Router} from "@angular/router";
 import {addIcons} from "ionicons";
-import {personCircle, personCircleOutline} from 'ionicons/icons'
+import {personCircle, personCircleOutline, alertCircleOutline} from 'ionicons/icons'
 
 @Component({
   selector: 'app-player-list',
@@ -32,7 +32,7 @@ export class PlayerListPage implements OnInit {
   players: Player[] = [];
 
   constructor() {
-    addIcons({personCircle, personCircleOutline})
+    addIcons({personCircle, personCircleOutline, alertCircleOutline})
   }
 
   ngOnInit() {

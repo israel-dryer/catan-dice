@@ -18,6 +18,10 @@ export class PlayerService {
 
   }
 
+  getPlayerCount() {
+    return db.players.count();
+  }
+
   createPlayer(name: string) {
     return db.players.add(
       {

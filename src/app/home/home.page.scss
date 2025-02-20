@@ -1,62 +1,28 @@
-/// https://catancollector.com/catan-news/136-catan-wallpapers-3-panel-design
+.sd-welcome-card {
+  --background: var(--md-secondaryContainer);
+}
 
-.sd-container {
+.sd-card-header {
+  color: var(--md-onSecondaryContainer);
+}
+
+.sd-card-content {
+  color: var(--md-onSecondaryContainer);
+}
+
+.sd-welcome-intro {
+  margin-bottom: 1rem;
+}
+
+.sd-card-item {
+  margin-bottom: 4px;
   display: flex;
-  position: relative;
-  flex-direction: column;
-  height: 100svh;
-  width: 100%;
-  padding: 2rem;
+  gap: .5rem;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  //background: radial-gradient(#d06d3d 5%, #923539 75%, #782b2f 100%) no-repeat;
-  background: var(--ion-color-secondary);
-  background-size: cover;
 }
 
-#play-button {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-}
-
-#sd-menu-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  color: rgb(200, 200, 200);
-}
-
-.sd-button-text {
-  font-family: "Crimson Pro", serif;
-  font-size: 3.5vh;
-}
-
-.sd-logo-image {
-  width: 25vh;
-  aspect-ratio: 1;
-}
-
-#sd-play-icon {
-  font-size: 10vh;
-}
-
-.sd-fade-in-effect {
-  animation: fadeIn 1.5s;
-}
-
-.sd-fade-in-text {
-  animation: fadeIn 2.5s;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.sd-card-item-text {
+  font-size: 14px;
 }
 
 @media screen and (orientation: landscape) {

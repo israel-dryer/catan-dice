@@ -16,8 +16,12 @@
 
   <section class="sd-list-section">
     <ion-list>
-      <ion-item *ngIf="players.length === 0" lines="none">
-        <ion-text>Create some players to play</ion-text>
+      <ion-item *ngIf="players.length < 2" lines="none">
+
+        <div class="sd-alert-card">
+          <ion-icon class="sd-alert-icon" name="alert-circle-outline"></ion-icon>
+          <ion-text class="sd-alert-text">2+ players required to play</ion-text>
+        </div>
       </ion-item>
       @for (player of players; track player.id) {
         <ion-item detail (click)="setupPlayerDetail(player)">

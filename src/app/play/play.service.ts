@@ -352,7 +352,7 @@ export class PlayService {
 
   async useRollHaptic() {
     if (!this.settings.rollHaptics) return;
-    await Haptics.impact({style: ImpactStyle.Heavy});
+    await Haptics.impact({style: ImpactStyle.Medium});
   }
 
 }

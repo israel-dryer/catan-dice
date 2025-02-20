@@ -1,10 +1,6 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // {
-  //   path: 'home',
-  //   loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-  // },
   {
     path: '',
     pathMatch: 'full',
@@ -48,18 +44,11 @@ export const routes: Routes = [
     path: 'game-detail',
     loadComponent: () => import('./game/game-detail/game-detail.page').then( m => m.GameDetailPage)
   },
-  // {
-  //   path: 'player-list',
-  //   loadComponent: () => import('./player/player-list/player-list.page').then( m => m.PlayerListPage)
-  // },
   {
     path: 'player-detail',
     loadComponent: () => import('./player/player-detail/player-detail.page').then( m => m.PlayerDetailPage)
   },
-  // {
-  //   path: 'app-settings',
-  //   loadComponent: () => import('./settings/app-settings/app-settings.page').then( m => m.AppSettingsPage)
-  // },
+
   {
     path: 'app-storage',
     loadComponent: () => import('./storage/app-storage/app-storage.page').then( m => m.AppStoragePage)

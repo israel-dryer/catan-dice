@@ -14,6 +14,10 @@ export class GameService {
     this.getActiveGame().then();
   }
 
+  getGameCount() {
+    return db.games.count();
+  }
+
   async getActiveGame() {
     if (!this._activeGame) {
       const jsonData = localStorage.getItem('activeGame');
