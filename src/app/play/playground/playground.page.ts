@@ -75,6 +75,11 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
   readonly router = inject(Router);
   readonly platform = inject(Platform);
 
+  // onboarding popover
+  rollDicePopoverVisible = false;
+  gameStatsPopoverVisible = true;
+  gameMenuPopoverVisible = false;
+
   // time duration state
   private readonly timerIntervalCallback?: any;
   elapsedHours = 0;
@@ -119,7 +124,7 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
   async ionViewWillEnter() {
     if (Capacitor.isNativePlatform()) {
       if (this.platform.is('android')) {
-        EdgeToEdge.setBackgroundColor({color: this.headerColor}).then();
+        await EdgeToEdge.setBackgroundColor({color: this.headerColor});
       }
       await StatusBar.setBackgroundColor({color: this.headerColor});
     }
@@ -128,7 +133,7 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
   async ionViewWillLeave() {
     if (Capacitor.isNativePlatform()) {
       if (this.platform.is('android')) {
-        EdgeToEdge.setBackgroundColor({color: this.backgroundColor}).then();
+        await EdgeToEdge.setBackgroundColor({color: this.backgroundColor});
       }
       await StatusBar.setBackgroundColor({color: this.backgroundColor});
     }
@@ -196,8 +201,8 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
       value: {id: player.id, name: player.name},
     }));
     const alert = await this.alertController.create({
-      header: 'Game Over?',
-      message: 'If you do not choose a winner, the game will be paused.',
+      header: 'Game Over',
+      message: 'Choose a winner to complete the game. Otherwise, the game can be continued from the game details screen.',
       inputs: alertInputs,
       buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Ok', role: 'submit'}]
     });

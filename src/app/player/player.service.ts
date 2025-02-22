@@ -43,7 +43,9 @@ export class PlayerService {
 
   setActivePlayer = (player: Player) => {
     this._activePlayer = player;
-    localStorage.setItem('activePlayer', JSON.stringify(player));
+    if (this._activePlayer) {
+      localStorage.setItem('activePlayer', JSON.stringify(player));
+    }
   }
 
   resetActivePlayer = () => {

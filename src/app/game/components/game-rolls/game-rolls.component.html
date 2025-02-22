@@ -17,7 +17,12 @@
           <td class="gr-total-col">{{ roll.total }}</td>
           <td>{{ roll.dice1 }}</td>
           <td>{{ roll.dice2 }}</td>
-          <td *ngIf="isCitiesKnights">{{ roll.diceAction }}</td>
+          <td *ngIf="isCitiesKnights">
+            <ion-icon size="large" *ngIf="roll.diceAction === 'Blu'" name="blue-city"/>
+            <ion-icon size="large" *ngIf="roll.diceAction === 'Grn'" name="green-city"/>
+            <ion-icon size="large" *ngIf="roll.diceAction === 'Gld'" name="gold-city"/>
+            <ion-icon size="large" *ngIf="roll.diceAction === 'Bar'" name="barbarian"/>
+          </td>
           <td>{{ roll.playerName }}</td>
         </tr>
       }

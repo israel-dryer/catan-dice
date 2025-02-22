@@ -90,3 +90,10 @@ export enum ActionDiceResult {
   GREEN = "Grn",
   GOLD = "Gld"
 }
+
+export interface GameData {
+  games: Game[];
+  players: Player[];
+  rolls: Roll[];
+  settings: Settings;
+}

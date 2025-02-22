@@ -25,7 +25,7 @@
       </ion-item>
       @for (player of players; track player.id) {
         <ion-item detail (click)="setupPlayerDetail(player)">
-          <ion-icon size="large" [color]="player.isUser ? 'primary' : undefined" slot="start" [name]="player.isUser ? 'person-circle' : 'person-circle-outline'"></ion-icon>
+          <ion-icon style="font-size: 36px" [color]="player.isUser ? 'primary' : undefined" slot="start" [name]="player.isUser ? 'person-circle' : 'person-circle-outline'"></ion-icon>
           <ion-text [color]="player.isUser ? 'primary' : undefined">{{ player.name }}</ion-text>
         </ion-item>
       }

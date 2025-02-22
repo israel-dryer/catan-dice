@@ -339,7 +339,7 @@ export class PlayService {
   async playAlchemyBubbles() {
     if (!this.settings.soundEffects) return;
     try {
-      await NativeAudio.play({assetId: 'bubbles'});
+      await NativeAudio.play({assetId: 'bubbles', time: 1.25});
     } catch (e) {
       console.log(e);
     }

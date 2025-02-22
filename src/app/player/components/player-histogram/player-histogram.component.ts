@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Histogram, Player} from "../../../shared/types";
-import {NgClass,NgStyle} from "@angular/common";
+import {NgStyle} from "@angular/common";
 import {IonText} from "@ionic/angular/standalone";
 
 @Component({
@@ -9,7 +9,6 @@ import {IonText} from "@ionic/angular/standalone";
   styleUrls: ['./player-histogram.component.scss'],
   imports: [
     NgStyle,
-    NgClass,
     IonText
   ]
 })

@@ -35,6 +35,12 @@
 @import "@ionic/angular/css/palettes/dark.system.css";
 @import '@ionic/angular/css/palettes/high-contrast-dark.system.css';
 
+@font-face {
+  font-family: 'Crimson Pro';
+  src: url('assets/fonts/CrimsonPro-Regular.ttf');
+}
+
+
 .md .alert-wrapper {
   border-radius: 8px;
 }
@@ -52,10 +58,27 @@
   border-bottom: 1px solid var(--ion-color-light-shade);
 }
 
+.sd-alert-message .alert-message {
+  color: var(--ion-color-danger);
+  font-style: italic;
+}
+
+ion-title {
+  font-family: 'Crimson Pro', sans-serif; font-size: 2rem;
+}
+
+
 @media (prefers-color-scheme: dark) {
   .md .sd-tabs-border {
     border-bottom: 1px solid var(--ion-background-color-step-150);
   }
+
+  .sd-alert-message .alert-message {
+    color: var(--ion-color-warning);
+    font-style: italic;
+  }
 }
+
+
 
 

@@ -48,9 +48,4 @@ export const routes: Routes = [
     path: 'player-detail',
     loadComponent: () => import('./player/player-detail/player-detail.page').then( m => m.PlayerDetailPage)
   },
-
-  {
-    path: 'app-storage',
-    loadComponent: () => import('./storage/app-storage/app-storage.page').then( m => m.AppStoragePage)
-  },
 ];

@@ -61,44 +61,18 @@ export class PlayerDetailPage implements OnInit {
     await alert.present();
   }
 
-  async showBookmarkPlayerDialog() {
-    if (!this.player) return;
-    const submitValue = this.player.isUser === 1 ? 0 : 1;
-    let message = 'Bookmarking a player allows you to use the Personal Stats link in the Settings menu.'
-    this.player.isUser === 1
-      ? message += '\n\n Remove this bookmark?'
-      : message += '\n\n Add bookmark to this player?'
-    const alert = await this.alertController.create({
-      header: 'Bookmark Player',
-      message,
-      buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Submit', role: 'submit'}]
-    });
-    alert.onDidDismiss().then(async event => {
-      if (event.role !== 'submit') {
-        return
-      }
-      if (submitValue === 0 && this.player) {
-        await this.playerService.bookmarkPlayer();
-      } else {
-        await this.playerService.bookmarkPlayer(this.player!.id!);
-      }
-      this.player!.isUser = submitValue;
-    });
-    await alert.present();
-  }
-
   async showDeletePlayerDialog() {
     if (!this.player) return;
-    let message = 'Historical records will remain but the player cannot be added to games and will not be visible in the players list. This action cannot be undone!';
+    let message = 'Are you sure? Historical stats remain, but this player can no longer play games. This action cannot be undone!';
     const alert = await this.alertController.create({
-      header: 'Delete Player',
+      header: 'Deactivate Player',
       message,
-      buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Delete', role: 'destructive'}]
+      buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Deactivate', role: 'destructive'}]
     });
     alert.onDidDismiss().then(async event => {
       if (event.role === 'destructive') {
         this.playerService.deactivatePlayer(this.player!.id!);
-        this.router.navigate(['player-list']).then(() => this.playerService.resetActivePlayer());
+        this.router.navigate(['tabs', 'player-list']).then(() => this.playerService.resetActivePlayer());
       }
     });
     await alert.present();

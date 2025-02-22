@@ -6,7 +6,7 @@
         {{ playService.nextPlayer?.name }}
       </ion-text>
     </div>
-    <div class="ion-text-center ion-text-uppercase" style="align-items: center; grid-column: 2">
+    <div class="ion-text-center ion-text-uppercase" style="align-items: center; grid-column: 2;">
       <div style="font-size: 2.2rem; font-weight: bold">
         {{ this.playService.diceTotal }}
       </div>
@@ -21,7 +21,10 @@
   </div>
 </ion-header>
 
-<ion-content>
+<ion-content style="position: relative;">
+  <div class="sd-tap-alert" *ngIf="playService.rollCount === 0">
+    <span>Tap to roll the dice</span>
+  </div>
   <div *ngIf="playService.activeGame" class="sd-play-container">
     @if (playService.isCitiesKnights) {
       <!-- Alchemy Button & Modal -->
@@ -132,12 +135,12 @@
            [backdropDismiss]="false">
   <ng-template>
     <div class="modal-content" style="position: relative;">
-      <img style="width: 100%; height: auto; transform: scale(1.5)" ngSrc="assets/images/sinister-robber.png"
+      <img rel="preload" style="width: 100%; height: auto; transform: scale(1.5)" ngSrc="assets/images/sinister-robber.png"
            alt="sinister robber" height="1024" width="1024">
       <div
         style="background-color: var(--md-surface); position: absolute; top: 0; width: 100%; opacity: 0.95; text-align: center; padding: 1rem">
         <ion-text style="font-weight: bold; font-size: 1.2rem">
-          The robber has come!
+          The robber strikes!
         </ion-text>
       </div>
       <div
@@ -155,7 +158,7 @@
            (didDismiss)="playService.resetBarbarians()" [backdropDismiss]="false" (click)="dismissBarbarianModal()">
   <ng-template>
     <div class="modal-content" style="position: relative;">
-      <img style="width: 100%; height: auto; transform: scale(1.9)" ngSrc="assets/images/barbarians-attack.png"
+      <img rel="preload" style="width: 100%; height: auto; transform: scale(1.9)" ngSrc="assets/images/barbarians-attack.png"
            alt="barbarians attack" height="1024" width="1024">
       <div
         style="background-color: var(--md-surface); position: absolute; top: 0; width: 100%; opacity: 0.95; text-align: center; padding: 1rem">
@@ -178,7 +181,7 @@
            (didDismiss)="dismissGameOverModal()" [backdropDismiss]="false" (click)="dismissGameOverModal()">
   <ng-template>
     <div class="modal-content" style="position: relative;">
-      <img style="width: 100%; height: auto; transform: scale(1.25)" ngSrc="assets/images/game-over-2.png"
+      <img rel="preload" style="width: 100%; height: auto; transform: scale(1.25)" ngSrc="assets/images/game-over-2.png"
            alt="game over" height="1024" width="1024">
       <div
         style="background-color: var(--md-surface); position: absolute; top: 0; width: 100%; opacity: 0.95; text-align: center; padding: 1rem">
@@ -201,7 +204,7 @@
            (didDismiss)="dismissGameOverModal()" [backdropDismiss]="false" (click)="dismissGameOverModal()">
   <ng-template>
     <div class="modal-content" style="position: relative;">
-      <img style="width: 100%; height: auto; transform: scale(1.25)" ngSrc="assets/images/villagers-playing-catan-2.png"
+      <img rel="preload" style="width: 100%; height: auto; transform: scale(1.25)" ngSrc="assets/images/villagers-playing-catan-2.png"
            alt="game over" height="1024" width="1024">
       <div
         style="background-color: var(--md-surface); position: absolute; top: 0; width: 100%; opacity: 0.95; text-align: center; padding: 1rem">

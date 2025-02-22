@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
   AlertController, IonBackButton, IonButton, IonButtons,
-  IonContent, IonFab, IonFabButton,
+  IonContent,
   IonHeader, IonIcon,
   IonItem, IonLabel,
   IonList, IonText,
@@ -22,7 +22,7 @@ import {personCircle, personCircleOutline, alertCircleOutline} from 'ionicons/ic
   templateUrl: './player-list.page.html',
   styleUrls: ['./player-list.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonButton, IonButtons, IonBackButton, IonIcon, IonText, IonFab, IonFabButton, IonLabel]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonButton, IonButtons, IonBackButton, IonIcon, IonText, IonLabel]
 })
 export class PlayerListPage implements OnInit {
 
@@ -45,14 +45,19 @@ export class PlayerListPage implements OnInit {
 
     const alert = await this.alertController.create({
       header: 'Create Player',
-      inputs: [{placeholder: 'Name', type: 'text', name: 'playerName'}],
-      buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Submit', role: 'submit'}]
+      cssClass: 'sd-alert-message',
+      message: '* required',
+      inputs: [{placeholder: 'Name', type: 'text', name: 'playerName', attributes: {maxLength: 10}}],
     });
-    alert.onDidDismiss().then(async event => {
-      if (event.data.values.playerName) {
-        await this.playerService.createPlayer(event.data.values.playerName);
+
+    const handler = async (data: any) => {
+      if (data.playerName) {
+        await this.playerService.createPlayer(data.playerName);
+        return true;
       }
-    });
+      return false;
+    }
+    alert.buttons = [{text: 'Cancel', role: 'cancel'}, {text: 'Submit', handler, role: 'submit'}];
     await alert.present();
   }
 

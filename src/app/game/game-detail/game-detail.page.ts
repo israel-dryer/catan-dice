@@ -72,7 +72,7 @@ export class GameDetailPage implements ViewWillEnter, OnInit {
     if (this.activeGame) {
       const alert = await this.alertController.create({
         header: 'Delete Game?',
-        message: 'Are you sure you want to delete this game?',
+        message: 'Are you sure? This action cannot be undone!',
         buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Delete', role: 'destructive'}]
       });
       alert.onDidDismiss().then(async (result) => {

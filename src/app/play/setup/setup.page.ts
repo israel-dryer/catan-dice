@@ -6,9 +6,9 @@ import {
   IonButton, IonButtons,
   IonCheckbox,
   IonContent,
-  IonHeader,
+  IonHeader, IonIcon,
   IonItem, IonLabel,
-  IonList,
+  IonList, IonNote,
   IonTitle,
   IonToggle,
   IonToolbar
@@ -21,13 +21,15 @@ import {SettingsService} from "../../settings/settings.service";
 import {state} from "@angular/animations";
 import {GameService} from "../../game/game.service";
 import {Router} from "@angular/router";
+import {addIcons} from "ionicons";
+import {informationCircle} from "ionicons/icons";
 
 @Component({
   selector: 'app-setup',
   templateUrl: './setup.page.html',
   styleUrls: ['./setup.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonCheckbox, IonItem, IonToggle, IonButton, IonLabel, IonAlert, IonButtons, IonBackButton]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonCheckbox, IonItem, IonToggle, IonButton, IonLabel, IonAlert, IonButtons, IonBackButton, IonNote, IonIcon]
 })
 export class SetupPage implements OnInit {
 
@@ -42,6 +44,10 @@ export class SetupPage implements OnInit {
   useFairDice = false;
   isSeafarers = false;
   isCitiesKnights = false;
+
+  constructor() {
+    addIcons({informationCircle})
+  }
 
   async ngOnInit() {
     const settings = await this.settingsService.getSettings();
@@ -94,7 +100,7 @@ export class SetupPage implements OnInit {
       this.isCitiesKnights ? 1 : 0);
 
     this.gameService.setActiveGame(game);
-    this.playService.startGame(game);
+    await this.playService.startGame(game);
     await this.router.navigate(['playground'], {replaceUrl: true});
   }
 
