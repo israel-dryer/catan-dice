@@ -104,7 +104,7 @@ export class AppSettingsPage implements OnInit {
   }
 
   importAppData() {
-    console.log('importing app data');
+
   }
 
 

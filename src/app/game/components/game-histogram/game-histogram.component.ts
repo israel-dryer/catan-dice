@@ -23,7 +23,7 @@ import {ViewWillEnter} from "@ionic/angular";
     IonLabel,
   ]
 })
-export class GameHistogramComponent implements OnDestroy, ViewWillEnter, ViewWillLeave {
+export class GameHistogramComponent implements OnDestroy {
 
   rolls = model.required<Roll[]>();
   game = model.required<Game>();
@@ -48,14 +48,6 @@ export class GameHistogramComponent implements OnDestroy, ViewWillEnter, ViewWil
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
-  }
-
-  ionViewWillEnter() {
-    console.log('Entering histogram');
-  }
-
-  ionViewWillLeave() {
-    console.log('Leaving histogram')
   }
 
   handleChipClicked(name: string) {

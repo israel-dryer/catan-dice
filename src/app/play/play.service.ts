@@ -86,7 +86,6 @@ export class PlayService {
   async initializeGameData() {
     const game = this.activeGame;
     if (game) {
-      console.log(game);
       this.roster = game.roster;
       this.nextIndex = game.turnIndex;
       this.nextPlayer = game.roster[game.turnIndex];
@@ -95,7 +94,6 @@ export class PlayService {
       this.isCitiesKnights = game.isCitiesKnights === 1;
       this.canShowRobber = !(game.isCitiesKnights === 1);
       this.useFairDice = game.useFairDice === 1;
-      console.log('Barbarian Count initialized', this.barbarianCount);
       // this will cause the fair dice to reset if continuing an existing game.
       if (this.useFairDice) {
         this.generateFairDiceSet();
@@ -224,7 +222,6 @@ export class PlayService {
   }
 
   async undoLastRoll() {
-    console.log('Current roll count', this.rollCount);
     if (!this.activeGame?.lastRoll) return;  // no rolls to reverse
     const lastRoll = this.activeGame.lastRoll;
     // update histogram
@@ -257,7 +254,6 @@ export class PlayService {
       this.activeGame = await this.gameService.getGame(this.activeGame.id!);
     }
     await this.updateLastRollData();
-    console.log('Final roll count', this.rollCount, this.activeGame?.rollCount);
     return newLastRoll;
   }
 
@@ -319,7 +315,6 @@ export class PlayService {
   }
 
   async resetBarbarians() {
-    console.log('Resetting barbarians');
     if (this.activeGame) {
       this.barbarianCount = 0;
       await this.gameService.updateGame(this.activeGame.id!, {barbarianCount: 0});

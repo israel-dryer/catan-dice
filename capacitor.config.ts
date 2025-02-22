@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'net.appforia.settlersdice',
   appName: 'Settlers Dice',
   webDir: 'www',
   backgroundColor: '#285021',
