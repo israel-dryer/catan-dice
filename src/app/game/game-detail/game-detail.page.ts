@@ -56,11 +56,13 @@ export class GameDetailPage implements ViewWillEnter, OnInit {
     liveQuery(() => this.gameService.getGame(this.activeGame?.id!))
       .subscribe(async game => {
         this.activeGame = game;
-        const _rolls = await this.gameService.getRollsByGameId(game?.id!);
-        // convert the id to a roll count then sort in reverse order.
-        _rolls.forEach((r, index) => r.id = index + 1);
-        _rolls.reverse();
-        this.rolls = _rolls
+        if (game) {
+          const _rolls = await this.gameService.getRollsByGameId(game?.id!);
+          // convert the id to a roll count then sort in reverse order.
+          _rolls.forEach((r, index) => r.id = index + 1);
+          _rolls.reverse();
+          this.rolls = _rolls
+        }
       });
   }
 

@@ -13,9 +13,9 @@ import {
   AlertController,
   IonCard,
   IonCardTitle,
-  IonCardHeader, IonCardContent, IonText, IonImg, IonSpinner, IonList, IonItem
+  IonCardHeader, IonCardContent, IonList, IonItem
 } from '@ionic/angular/standalone';
-import {Router, RouterLink} from "@angular/router";
+import {RouterLink} from "@angular/router";
 import {GameListPage} from "../game/game-list/game-list.page";
 import {GameSummaryCardComponent} from "../game/components/game-summary-card/game-summary-card.component";
 import {liveQuery} from "dexie";
@@ -40,20 +40,19 @@ export class HomePage implements OnInit {
 
   constructor(
     gameService: GameService,
-    private router: Router,
     private playerService: PlayerService,
     private alertController: AlertController) {
     addIcons({checkbox, squareOutline});
 
-    const _playerCount = localStorage.getItem('playerCount');
+    const _playerCount = localStorage.getItem('SettlersDice.playerCount');
     if (_playerCount) {
       this.playerCount = parseInt(_playerCount);
     }
-    const _gameCount = localStorage.getItem('gameCount');
+    const _gameCount = localStorage.getItem('SettlersDice.gameCount');
     if (_gameCount) {
       this.gameCount = parseInt(_gameCount);
     }
-    const _userPlayer = localStorage.getItem('userPlayer');
+    const _userPlayer = localStorage.getItem('SettlersDice.userPlayer');
     if (_userPlayer) {
       this.userPlayer = JSON.parse(_userPlayer);
     }
@@ -61,18 +60,18 @@ export class HomePage implements OnInit {
     liveQuery(() => gameService.getGameCount())
       .subscribe(gameCount => {
         this.gameCount = gameCount;
-        localStorage.setItem('gameCount', `${gameCount}`);
+        localStorage.setItem('SettlersDice.gameCount', `${gameCount}`);
       });
     liveQuery(() => playerService.getPlayerCount())
       .subscribe(playerCount => {
         this.playerCount = playerCount;
-        localStorage.setItem('playerCount', `${playerCount}`);
+        localStorage.setItem('SettlersDice.playerCount', `${playerCount}`);
       });
     liveQuery(() => this.playerService.getUserPlayer())
       .subscribe(player => {
         this.userPlayer = player;
         if (this.userPlayer) {
-          localStorage.setItem('userPlayer', JSON.stringify(this.userPlayer));
+          localStorage.setItem('SettlersDice.userPlayer', JSON.stringify(this.userPlayer));
         }
       })
   }

@@ -20,7 +20,7 @@ export class GameService {
 
   async getActiveGame() {
     if (!this._activeGame) {
-      const jsonData = localStorage.getItem('activeGame');
+      const jsonData = localStorage.getItem('SettlersDice.activeGame');
       if (!jsonData) return;
       const game = JSON.parse(jsonData);
       this._activeGame = await this.getGame(game.id!);
@@ -30,7 +30,7 @@ export class GameService {
 
   setActiveGame(game: Game) {
     this._activeGame = game;
-    localStorage.setItem('activeGame', JSON.stringify(game));
+    localStorage.setItem('SettlersDice.activeGame', JSON.stringify(game));
   }
 
   async createGame(

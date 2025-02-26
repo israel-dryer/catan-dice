@@ -11,7 +11,7 @@ export class PlayerService {
   _activePlayer: Player | undefined;
 
   constructor() {
-    const activePlayer = localStorage.getItem('activePlayer');
+    const activePlayer = localStorage.getItem('SettlersDice.activePlayer');
     if (activePlayer) {
       this._activePlayer = JSON.parse(activePlayer);
     }
@@ -45,7 +45,7 @@ export class PlayerService {
   setActivePlayer = (player: Player) => {
     this._activePlayer = player;
     if (this._activePlayer) {
-      localStorage.setItem('activePlayer', JSON.stringify(player));
+      localStorage.setItem('SettlersDice.activePlayer', JSON.stringify(player));
     }
   }
 

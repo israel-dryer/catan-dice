@@ -26,7 +26,7 @@ export class AppDb extends Dexie {
     this.on('populate', () => {
       // add default settings
       this.settings.add({
-        fairDice: 1,
+        fairDice: 0,
         rollHaptics: 1,
         rollAnnouncer: 1,
         soundEffects: 1
@@ -46,10 +46,7 @@ export class AppDb extends Dexie {
     const players = await this.players.toArray();
     const settings = await this.settings.toArray();
     const rolls = await this.rolls.toArray();
-    const activePlayer = localStorage.getItem('activePlayer');
-    const gameCount = localStorage.getItem('gameCount');
-    const playerCount = localStorage.getItem('playerCount');
-    const userPlayer = localStorage.getItem('userPlayer');
+    const userPlayer = localStorage.getItem('SettlersDice.userPlayer');
 
     // save all data
     await Preferences.set({key: 'games', value: JSON.stringify(games)});
@@ -57,15 +54,6 @@ export class AppDb extends Dexie {
     await Preferences.set({key: 'rolls', value: JSON.stringify(rolls)});
     await Preferences.set({key: 'settings', value: JSON.stringify(settings)});
 
-    if (activePlayer) {
-      await Preferences.set({key: 'activePlayer', value: activePlayer});
-    }
-    if (gameCount) {
-      await Preferences.set({key: 'gameCount', value: gameCount});
-    }
-    if (playerCount) {
-      await Preferences.set({key: 'playerCount', value: playerCount});
-    }
     if (userPlayer) {
       await Preferences.set({key: 'userPlayer', value: userPlayer});
     }
@@ -77,9 +65,6 @@ export class AppDb extends Dexie {
     const players = await Preferences.get({key: 'players'});
     const settings = await Preferences.get({key: 'settings'});
     const rolls = await Preferences.get({key: 'rolls'});
-    const activePlayer = await Preferences.get({key: 'activePlayer'});
-    const gameCount = await Preferences.get({key: 'gameCount'});
-    const playerCount = await Preferences.get({key: 'playerCount'});
     const userPlayer = await Preferences.get({key: 'userPlayer'});
 
     if (games.value) {
@@ -102,17 +87,8 @@ export class AppDb extends Dexie {
         await this.settings.put(item, item.id);
       }
     }
-    if (activePlayer.value) {
-      localStorage.setItem('activePlayer', activePlayer.value);
-    }
-    if (gameCount.value) {
-      localStorage.setItem('gameCount', gameCount.value);
-    }
-    if (playerCount.value) {
-      localStorage.setItem('playerCount', playerCount.value);
-    }
     if (userPlayer.value) {
-      localStorage.setItem('userPlayer', userPlayer.value);
+      localStorage.setItem('SettlersDice.userPlayer', userPlayer.value);
     }
   }
 }

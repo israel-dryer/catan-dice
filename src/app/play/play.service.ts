@@ -8,6 +8,27 @@ import {TextToSpeech} from "@capacitor-community/text-to-speech";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
 import {db} from '../shared/database';
 
+interface GameState {
+  rollCount: number;
+  nextIndex: number;
+  prevIndex: number;
+  nextPlayer: RosterPlayer | undefined;
+  prevPlayer: RosterPlayer | undefined;
+  lastRoll: Roll | undefined;
+  dice1Result: number;
+  dice2Result: number;
+  barbarianCount: number;
+  isCitiesKnights: boolean;
+  settings: Settings;
+  barbariansAttack: boolean;
+  robberStealing: boolean;
+  canShowRobber: boolean;
+  roster: RosterPlayer[];
+  activeGame: Game | undefined;
+  activeGameRolls: Roll[];
+  fairDiceCollection: number[][];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -62,6 +83,59 @@ export class PlayService {
     });
   }
 
+  saveGameState() {
+    const gameCache = {
+      rollCount: this.rollCount,
+      nextIndex: this.nextIndex,
+      prevIndex: this.prevIndex,
+      nextPlayer: this.nextPlayer,
+      prevPlayer: this.prevPlayer,
+      lastRoll: this.lastRoll,
+      dice1Result: this.dice1Result,
+      dice2Result: this.dice2Result,
+      barbarianCount: this.barbarianCount,
+      isCitiesKnights: this.isCitiesKnights,
+      settings: this.settings,
+      barbariansAttack: this.barbariansAttack,
+      robberStealing: this.robberStealing,
+      canShowRobber: this.canShowRobber,
+      roster: this.roster,
+      activeGame: this.activeGame,
+      activeGameRolls: this.activeGameRolls,
+      fairDiceCollection: this.fairDiceCollection,
+    }
+    localStorage.setItem('SettlersDice.activeGameState', JSON.stringify(gameCache));
+  }
+
+  restoreGameState() {
+    const cache = localStorage.getItem('SettlersDice.activeGameState');
+    if (cache) {
+      const state = JSON.parse(cache) as GameState;
+      this.rollCount = state.rollCount;
+      this.nextIndex = state.nextIndex;
+      this.prevIndex = state.prevIndex;
+      this.nextPlayer = state.nextPlayer;
+      this.prevPlayer = state.prevPlayer;
+      this.lastRoll = state.lastRoll;
+      this.dice1Result = state.dice1Result;
+      this.dice2Result = state.dice2Result;
+      this.barbarianCount = state.barbarianCount;
+      this.isCitiesKnights = state.isCitiesKnights;
+      this.settings = state.settings;
+      this.barbarianCount = state.barbarianCount;
+      this.robberStealing = state.robberStealing;
+      this.canShowRobber = state.canShowRobber;
+      this.roster = state.roster;
+      this.activeGame = state.activeGame;
+      this.activeGameRolls = state.activeGameRolls;
+      this.fairDiceCollection = state.fairDiceCollection;
+    }
+  }
+
+  resetGameState() {
+    localStorage.removeItem('SettlersDice.activeGameState');
+  }
+
   async startGame(game: Game) {
     this.activeGame = game;
     await this.initializeGameData();
@@ -95,11 +169,14 @@ export class PlayService {
       this.isCitiesKnights = game.isCitiesKnights === 1;
       this.canShowRobber = !(game.isCitiesKnights === 1);
       this.useFairDice = game.useFairDice === 1;
-      // this will cause the fair dice to reset if continuing an existing game.
+
       if (this.useFairDice) {
         this.generateFairDiceSet();
       }
     }
+    // restore state if existing
+    this.restoreGameState();
+
   }
 
   async endGame(winner?: RosterPlayer) {
@@ -122,6 +199,7 @@ export class PlayService {
       }
       await db.backupData();
     }
+    this.resetGameState();
   }
 
   // Dice Roll Functions
@@ -182,6 +260,7 @@ export class PlayService {
     await this.gameService.updateGame(game.id!, gameChanges);
     this.activeGame = await this.gameService.getGame(game.id!);
     await this.updateLastRollData();
+    this.saveGameState();
   }
 
   resetRobberStealing() {
@@ -256,6 +335,7 @@ export class PlayService {
       this.activeGame = await this.gameService.getGame(this.activeGame.id!);
     }
     await this.updateLastRollData();
+    this.saveGameState();
     return newLastRoll;
   }
 
