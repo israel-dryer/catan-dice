@@ -6,7 +6,7 @@ import {
   IonBackButton,
   IonButtons,
   IonContent,
-  IonHeader,
+  IonHeader, IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -26,7 +26,7 @@ import {db} from "../../shared/database";
   templateUrl: './app-settings.page.html',
   styleUrls: ['./app-settings.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonLabel, IonToggle, IonButtons, IonBackButton, IonNote]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonLabel, IonToggle, IonButtons, IonBackButton, IonNote, IonIcon]
 })
 export class AppSettingsPage implements OnInit {
 

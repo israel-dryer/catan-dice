@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package net.appforia.settlersdice;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -49,16 +49,19 @@
       </ion-item>
       <ion-list lines="none">
         <ion-item>
+          <ion-icon slot="start" name="knight"></ion-icon>
           <ion-toggle [checked]="isCitiesKnights" (ionChange)="handleCitiesKnightsChanged()">
             Cities & Knights Expansion
           </ion-toggle>
         </ion-item>
         <ion-item>
+          <ion-icon slot="start" name="viking-ship"></ion-icon>
           <ion-toggle [checked]="isSeafarers" (ionChange)="handleSeafarersChanged()">
             Seafarers Expansion
           </ion-toggle>
         </ion-item>
         <ion-item>
+          <ion-icon slot="start" name="distribution"></ion-icon>
           <ion-toggle [checked]="useFairDice" (ionChange)="handleFairDiceChanged()">
             Use Fair Dice
           </ion-toggle>

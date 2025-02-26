@@ -23,8 +23,8 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await db.restoreFromBackup();
     await this.initializeIcons();
+    await db.restoreFromBackup();
     //background & edge-to-edge
     if (Capacitor.isNativePlatform()) {
       const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
@@ -115,7 +115,6 @@ export class AppComponent implements OnInit {
       'restore': 'assets/svg/sd-database-restore.svg',
       'friend-list': 'assets/svg/sd-friend-list.svg',
       'checkmark': 'assets/svg/sd-checkmark.svg',
-      'back': this.platform.is('ios') ? chevronBack : 'assets/svg/sd-back.svg',
       'notification': 'assets/svg/sd-notification.svg',
       'chat': 'assets/svg/sd-chat.svg',
       'menu': 'assets/svg/sd-menu.svg',
@@ -142,6 +141,11 @@ export class AppComponent implements OnInit {
       'user': 'assets/svg/sd-user.svg',
       'farm': 'assets/svg/sd-farm.svg',
       'circle-user': 'assets/svg/sd-circle-user.svg',
+      'sound': 'assets/svg/sd-sound.svg',
+      'voice': 'assets/svg/sd-voice.svg',
+      'shake': 'assets/svg/sd-shake.svg',
+      'distribution': 'assets/svg/sd-distribution.svg',
+      'knight': 'assets/svg/sd-knight.svg',
     });
   }
 

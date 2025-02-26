@@ -1,7 +1,7 @@
 <ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button icon="back"></ion-back-button>
+      <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Settings</ion-title>
   </ion-toolbar>
@@ -19,6 +19,7 @@
       <section class="sd-list-section">
         <ion-list>
           <ion-item>
+            <ion-icon slot="start" name="sound"></ion-icon>
             <ion-toggle [checked]="settings.soundEffects" (ionChange)="handleSettingsChange('soundEffects', $event)">
               <ion-label>
                 <h2>Sound Effects</h2>
@@ -27,6 +28,7 @@
             </ion-toggle>
           </ion-item>
           <ion-item>
+            <ion-icon slot="start" name="distribution"></ion-icon>
             <ion-toggle [checked]="settings.fairDice" (ionChange)="handleSettingsChange('fairDice', $event)">
               <ion-label>
                 <h2>Use Fair Dice</h2>
@@ -35,6 +37,7 @@
             </ion-toggle>
           </ion-item>
           <ion-item>
+            <ion-icon slot="start" name="voice"></ion-icon>
             <ion-toggle [checked]="settings.rollAnnouncer" (ionChange)="handleSettingsChange('rollAnnouncer', $event)">
               <ion-label>
                 <h2>Roll Announce</h2>
@@ -43,6 +46,7 @@
             </ion-toggle>
           </ion-item>
           <ion-item lines="none">
+            <ion-icon slot="start" name="shake"></ion-icon>
             <ion-toggle [checked]="settings.rollHaptics" (ionChange)="handleSettingsChange('rollHaptics', $event)">
               <ion-label>
                 <h2>Roll Haptics</h2>
