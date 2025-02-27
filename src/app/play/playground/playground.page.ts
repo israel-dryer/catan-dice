@@ -75,11 +75,6 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
   readonly router = inject(Router);
   readonly platform = inject(Platform);
 
-  // onboarding popover
-  rollDicePopoverVisible = false;
-  gameStatsPopoverVisible = true;
-  gameMenuPopoverVisible = false;
-
   // time duration state
   private readonly timerIntervalCallback?: any;
   elapsedHours = 0;

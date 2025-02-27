@@ -7,6 +7,7 @@ import {NativeAudio} from '@capgo/native-audio'
 import {TextToSpeech} from "@capacitor-community/text-to-speech";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
 import {db} from '../shared/database';
+import {liveQuery} from "dexie";
 
 interface GameState {
   rollCount: number;
@@ -71,9 +72,10 @@ export class PlayService {
   isRolling = signal(false);
 
   constructor() {
-    this.settingsService.getSettings().then((settings) => {
-      this.settings = settings!;
-    });
+    liveQuery(() => this.settingsService.getSettings())
+      .subscribe(settings => {
+        if (settings) this.settings = settings;
+      });
 
     // set active game if screen is refreshed for some reason
     this.gameService.getActiveGame().then(async game => {
@@ -95,7 +97,6 @@ export class PlayService {
       dice2Result: this.dice2Result,
       barbarianCount: this.barbarianCount,
       isCitiesKnights: this.isCitiesKnights,
-      settings: this.settings,
       barbariansAttack: this.barbariansAttack,
       robberStealing: this.robberStealing,
       canShowRobber: this.canShowRobber,
@@ -121,7 +122,6 @@ export class PlayService {
       this.dice2Result = state.dice2Result;
       this.barbarianCount = state.barbarianCount;
       this.isCitiesKnights = state.isCitiesKnights;
-      this.settings = state.settings;
       this.barbarianCount = state.barbarianCount;
       this.robberStealing = state.robberStealing;
       this.canShowRobber = state.canShowRobber;
