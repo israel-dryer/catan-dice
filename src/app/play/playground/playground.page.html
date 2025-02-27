@@ -22,7 +22,7 @@
 </ion-header>
 
 <ion-content style="position: relative;">
-  <div class="sd-tap-alert" *ngIf="playService.rollCount === 0">
+  <div class="sd-tap-alert" *ngIf="playService.rollCount === 0" (click)="rollDice()">
     <span>Tap to roll the dice</span>
   </div>
   <div *ngIf="playService.activeGame" class="sd-play-container">
