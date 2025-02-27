@@ -1,21 +1,28 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy, output} from '@angular/core';
 import {db} from "../shared/database";
 import {createHistogram} from "../shared/utilities";
 import {Player} from "../shared/types";
+import {BehaviorSubject} from "rxjs";
+import {liveQuery} from "dexie";
 
 @Injectable({
   providedIn: 'root'
 })
-export class PlayerService {
+export class PlayerService implements OnDestroy {
 
   _activePlayer: Player | undefined;
+  private activePlayerSub: any;
+  readonly activePlayerChanged = new BehaviorSubject<Player|undefined>(undefined);
 
   constructor() {
     const activePlayer = localStorage.getItem('SettlersDice.activePlayer');
     if (activePlayer) {
-      this._activePlayer = JSON.parse(activePlayer);
+      this.setActivePlayer(JSON.parse(activePlayer));
     }
+  }
 
+  ngOnDestroy() {
+    this.activePlayerSub?.unsubscribe();
   }
 
   async getPlayerCount() {
@@ -46,6 +53,12 @@ export class PlayerService {
     this._activePlayer = player;
     if (this._activePlayer) {
       localStorage.setItem('SettlersDice.activePlayer', JSON.stringify(player));
+      this.activePlayerSub?.unsubscribe();
+      this.activePlayerSub = liveQuery(() => this.getPlayer(this._activePlayer!.id!))
+        .subscribe(player => {
+          this._activePlayer = player;
+          this.activePlayerChanged.next(this._activePlayer!);
+        });
     }
   }
 

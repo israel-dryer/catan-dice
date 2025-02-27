@@ -1,5 +1,5 @@
 <div style="display: flex; flex-direction: column; gap: 1rem; padding: 1rem;">
-@for (game of games; track game.id) {
+@for (game of games(); track game.id) {
   <app-game-detail-card [game]="game"></app-game-detail-card>
 }
 </div>

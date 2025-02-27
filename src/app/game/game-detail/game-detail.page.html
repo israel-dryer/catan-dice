@@ -5,7 +5,7 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Game Details</ion-title>
-    <ion-buttons *ngIf="showSummary" slot="end">
+    <ion-buttons slot="end">
       <ion-button (click)="deleteGame()">
         <ion-icon slot="icon-only" name="trash"/>
       </ion-button>
@@ -14,14 +14,14 @@
 
   <!-- Segment Control -->
   <ion-toolbar>
-    <ion-segment [value]="showSummary ? 'summary' : 'rolls'">
-      <ion-segment-button *ngIf="showSummary" value="summary" content-id="summary">
+    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="handleSegmentChanged($event)" [swipeGesture]="true">
+      <ion-segment-button [value]="0">
         <ion-label>Summary</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="rolls" content-id="rolls">
+      <ion-segment-button [value]="1">
         <ion-label>Rolls</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="histogram" content-id="histogram">
+      <ion-segment-button [value]="2">
         <ion-label>Histogram</ion-label>
       </ion-segment-button>
     </ion-segment>
@@ -29,17 +29,15 @@
 </ion-header>
 
 <ion-content fullscreen>
-  <ion-segment-view>
-    <ion-segment-content *ngIf="showSummary" id="summary">
+  <swiper-container #swiperContainer>
+    <swiper-slide class="sd-swiper-slide">
       <app-game-summary *ngIf="activeGame" [game]="activeGame"></app-game-summary>
-    </ion-segment-content>
-    <ion-segment-content id="rolls">
-      <app-game-rolls *ngIf="activeGame" [rolls]="rolls"
-                      [isCitiesKnights]="activeGame.isCitiesKnights === 1"></app-game-rolls>
-    </ion-segment-content>
-    <ion-segment-content id="histogram">
+    </swiper-slide>
+    <swiper-slide class="sd-swiper-slide">
+      <app-game-rolls *ngIf="activeGame" [rolls]="rolls" [isCitiesKnights]="activeGame.isCitiesKnights === 1"></app-game-rolls>
+    </swiper-slide>
+    <swiper-slide class="sd-swiper-slide">
       <app-game-histogram *ngIf="activeGame" [rolls]="rolls" [game]="activeGame"></app-game-histogram>
-    </ion-segment-content>
-  </ion-segment-view>
-
+    </swiper-slide>
+  </swiper-container>
 </ion-content>

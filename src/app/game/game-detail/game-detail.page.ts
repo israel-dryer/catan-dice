@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, OnInit, viewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
@@ -15,40 +15,35 @@ import {
 import {GameService} from "../game.service";
 import {ViewWillEnter} from '@ionic/angular';
 import {Game, Roll} from "../../shared/types";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {GameSummaryComponent} from "../components/game-summary/game-summary.component";
 import {GameRollsComponent} from "../components/game-rolls/game-rolls.component";
 import {GameHistogramComponent} from "../components/game-histogram/game-histogram.component";
 import {liveQuery} from "dexie";
 import {StatisticsService} from "../../shared/statistics.service";
+import Swiper from "swiper";
 
 @Component({
   selector: 'app-game-detail',
   templateUrl: './game-detail.page.html',
   styleUrls: ['./game-detail.page.scss'],
   standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonButtons, IonBackButton, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent, GameSummaryComponent, GameRollsComponent, GameHistogramComponent, IonIcon]
 })
-export class GameDetailPage implements ViewWillEnter, OnInit {
+export class GameDetailPage implements ViewWillEnter, OnInit, AfterViewInit {
 
+  readonly swiperContainer = viewChild.required<ElementRef>('swiperContainer');
   activeGame?: Game;
   rolls: Roll[] = [];
-  showSummary = true;
+  selectedSegment = 0;
 
   readonly alertController = inject(AlertController);
-  readonly activeRoute = inject(ActivatedRoute);
   readonly router = inject(Router);
   readonly gameService = inject(GameService);
   readonly statisticService = inject(StatisticsService);
 
-  constructor() {
-
-  }
-
   async ngOnInit() {
-    this.activeRoute.queryParamMap.subscribe(param => {
-      this.showSummary = param.get('summary') !== 'false'
-    });
 
     this.activeGame = await this.gameService.getActiveGame();
     this.rolls = await this.gameService.getRollsByGameId(this.activeGame?.id!);
@@ -64,6 +59,12 @@ export class GameDetailPage implements ViewWillEnter, OnInit {
           this.rolls = _rolls
         }
       });
+  }
+
+  ngAfterViewInit() {
+    this.swiperContainer().nativeElement.addEventListener('swiperslidechange', (e: any) => {
+      this.selectedSegment = e.detail[0].activeIndex;
+    });
   }
 
   async ionViewWillEnter() {
@@ -88,9 +89,11 @@ export class GameDetailPage implements ViewWillEnter, OnInit {
         }
       });
       await alert.present();
-
     }
-
   }
 
+  handleSegmentChanged(event: any) {
+    this.selectedSegment = event.detail.value;
+    (this.swiperContainer().nativeElement.swiper as Swiper).slideTo(event.detail.value);
+  }
 }

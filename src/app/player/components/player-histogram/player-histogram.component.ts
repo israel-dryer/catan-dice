@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Histogram, Player} from "../../../shared/types";
+import {Component, computed, input} from '@angular/core';
+import {Player} from "../../../shared/types";
 import {NgStyle} from "@angular/common";
 import {IonText} from "@ionic/angular/standalone";
 
@@ -12,18 +12,12 @@ import {IonText} from "@ionic/angular/standalone";
     IonText
   ]
 })
-export class PlayerHistogramComponent implements OnInit {
+export class PlayerHistogramComponent {
 
-  @Input() player!: Player;
+  player = input.required<Player>();
   backgroundChart = false;
-  histogram!: Histogram;
-  rolls: number[] = [];
-  maxValue = 0;
-
-  ngOnInit() {
-    this.histogram = this.player.histogram;
-    this.rolls = Object.values(this.player.histogram);
-    this.maxValue = Math.max(...this.rolls);
-  }
+  histogram = computed(() => this.player().histogram);
+  rolls = computed(() => Object.values(this.player().histogram));
+  maxValue = computed(() => Math.max(...this.rolls()));
 
 }

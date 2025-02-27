@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Game} from "../../shared/types";
@@ -16,13 +16,13 @@ import {GameDetailCardComponent} from "../components/game-detail-card/game-detai
 })
 export class GameListPage implements OnInit {
 
-  games: Game[] = [];
+  games = signal<Game[]>([]);
   readonly gameService = inject(GameService);
   readonly router = inject(Router);
 
   ngOnInit() {
     liveQuery(() => this.gameService.getGames())
-      .subscribe(games => this.games = games.sort((a, b) => a.createdOn < b.createdOn ? 1 : -1));
+      .subscribe(games => this.games.set(games.sort((a, b) => a.createdOn < b.createdOn ? 1 : -1)));
   }
 
 }

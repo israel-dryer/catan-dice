@@ -1,4 +1,13 @@
-import {AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, OnInit, viewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  viewChild
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
@@ -6,51 +15,46 @@ import {
   IonButton, IonButtons,
   IonContent,
   IonHeader,
-  IonIcon, IonLabel, IonSegment, IonSegmentButton,
+  IonIcon, IonLabel, IonSegment, IonSegmentButton, IonSegmentContent, IonSegmentView,
   IonTitle,
   IonToolbar
 } from '@ionic/angular/standalone';
-import {PlayerService} from "../player.service";
 import {Player} from "../../shared/types";
 import {addIcons} from "ionicons";
 import {bookmark, bookmarkOutline} from "ionicons/icons";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
+import {PlayerService} from "../player.service";
 import {PlayerSummaryComponent} from "../components/player-summary/player-summary.component";
 import {PlayerHistogramComponent} from "../components/player-histogram/player-histogram.component";
+import {liveQuery} from "dexie";
 import Swiper from "swiper";
-
 
 @Component({
   selector: 'app-player-detail',
-  templateUrl: './player-detail.page.html',
-  styleUrls: ['./player-detail.page.scss'],
+  templateUrl: './user-detail.page.html',
+  styleUrls: ['./user-detail.page.scss'],
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonButtons, IonBackButton, PlayerSummaryComponent, IonSegment, IonSegmentButton, IonLabel, PlayerHistogramComponent]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonButtons, IonBackButton, PlayerSummaryComponent, IonSegment, IonSegmentButton, IonLabel, IonSegmentView, IonSegmentContent, PlayerHistogramComponent, PlayerSummaryComponent, PlayerHistogramComponent]
 })
-export class PlayerDetailPage implements OnInit, AfterViewInit {
+export class UserDetailPage implements OnInit, OnDestroy, AfterViewInit {
 
   readonly swiperContainer = viewChild.required<ElementRef>('swiperContainer');
   readonly router = inject(Router);
-  readonly route = inject(ActivatedRoute);
   readonly alertController = inject(AlertController);
   readonly playerService = inject(PlayerService);
   selectedSegment = 0;
   player?: Player
+  private playerDataSub: any;
 
   constructor() {
-    this.route.queryParams.subscribe(async (params) => {
-      const playerId = params['id'];
-      console.log('playerId', playerId);
-      if (playerId) {
-        this.player = await this.playerService.getPlayer(parseInt(playerId));
-      }
-    });
+    this.playerDataSub = liveQuery(() => this.playerService.getUserPlayer())
+      .subscribe(player => this.player = player);
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     addIcons({bookmark, bookmarkOutline})
-    this.player = this.playerService.getActivePlayer();
+    this.player = await this.playerService.getUserPlayer();
   }
 
   ngAfterViewInit() {
@@ -59,11 +63,15 @@ export class PlayerDetailPage implements OnInit, AfterViewInit {
     });
   }
 
+  ngOnDestroy() {
+    this.playerDataSub?.unsubscribe();
+  }
+
   async showEditPlayerNameDialog() {
     if (!this.player) return;
 
     const alert = await this.alertController.create({
-      header: 'Edit Player Name',
+      header: 'Edit User Name',
       inputs: [{label: 'Name', type: 'text', name: 'playerName', value: this.player.name}],
       buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Submit', role: 'submit'}]
     });
@@ -75,23 +83,6 @@ export class PlayerDetailPage implements OnInit, AfterViewInit {
       if (name && this.player) {
         await this.playerService.updatePlayer(this.player.id!, {name});
         this.player.name = name;
-      }
-    });
-    await alert.present();
-  }
-
-  async showDeletePlayerDialog() {
-    if (!this.player) return;
-    let message = 'Are you sure? Historical stats remain, but this player can no longer play games. This action cannot be undone!';
-    const alert = await this.alertController.create({
-      header: 'Deactivate Player',
-      message,
-      buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Deactivate', role: 'destructive'}]
-    });
-    alert.onDidDismiss().then(async event => {
-      if (event.role === 'destructive') {
-        this.playerService.deactivatePlayer(this.player!.id!);
-        this.router.navigate(['tabs', 'player-list']).then(() => this.playerService.resetActivePlayer());
       }
     });
     await alert.present();

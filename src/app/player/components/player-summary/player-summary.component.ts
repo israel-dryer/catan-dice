@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, computed, input} from '@angular/core';
 import {IonInput, IonItem, IonLabel, IonList} from "@ionic/angular/standalone";
 import {Player} from "../../../shared/types";
 
@@ -13,44 +13,58 @@ import {Player} from "../../../shared/types";
     IonLabel,
   ]
 })
-export class PlayerSummaryComponent implements OnInit {
+export class PlayerSummaryComponent {
 
-  // statistics
-  lastPlayed = '';
-  hoursPlayed = '';
-  totalRolls = '';
-  gamesPlayed = '';
-  gamesWon = '';
-  winRate = '';
-  longestWinStreak = '';
-  fastestWin = '';
-  robberRate = '';
+  player = input.required<Player>();
+  lastPlayed = computed(() => this.formatLastPlayed(this.player()));
+  hoursPlayed = computed(() => this.formatHoursPlayed(this.player()));
+  totalRolls = computed(() => this.formatTotalRolls(this.player()));
+  gamesPlayed = computed(() => this.formatGamesPlayed(this.player()));
+  gamesWon = computed(() => this.formatGamesWon(this.player()));
+  winRate = computed(() => this.formatWinRate(this.player()));
+  longestWinStreak = computed(() => this.formatLongestWinStreak(this.player()));
+  fastestWin = computed(() => this.formatFastestWin(this.player()));
+  robberRate = computed(() => this.formatRobberRate(this.player()));
 
-  @Input() player!: Player;
-
-
-  ngOnInit() {
-    this.formatStatistics();
+  formatLastPlayed(player: Player) {
+    return player.lastPlayed === 0 ? 'Never' : new Date(player.lastPlayed).toLocaleString()
   }
 
-  formatStatistics() {
-    if (this.player) {
-      this.lastPlayed = this.player.lastPlayed === 0 ? 'Never' : new Date(this.player.lastPlayed).toLocaleString();
-      this.hoursPlayed = ((this.player.secondsPlayed / 60) / 60).toFixed(1) + ' hours';
-      this.totalRolls = this.player.totalRolls.toFixed(0);
-      this.gamesPlayed = this.player.gamesPlayed.toFixed(0);
-      this.gamesWon = this.player.gamesWon.toFixed(0);
-      this.winRate = (this.player.gamesPlayed === 0 ? '0%' : (this.player.gamesWon / this.player.gamesPlayed).toLocaleString(undefined, {
-        style: 'percent',
-        maximumFractionDigits: 1
-      }));
-      this.longestWinStreak = this.player.longestWinsStreak.toFixed(0);
-      this.fastestWin = (this.player.fastestWinSeconds / 60).toFixed(1) + ' minutes';
-      this.robberRate = (this.player.totalRolls === 0 ? '0%' : (this.player.robberRolls / this.player.totalRolls).toLocaleString(undefined, {
-        style: 'percent',
-        maximumFractionDigits: 1
-      }));
-    }
+  formatHoursPlayed(player: Player) {
+    return ((player.secondsPlayed / 60) / 60).toFixed(1) + ' hours';
   }
 
+  formatTotalRolls(player: Player) {
+    return player.totalRolls.toFixed(0);
+  }
+
+  formatGamesPlayed(player: Player) {
+    return player.gamesPlayed.toFixed(0);
+  }
+
+  formatGamesWon(player: Player) {
+    return player.gamesWon.toFixed(0);
+  }
+
+  formatWinRate(player: Player) {
+    return (player.gamesPlayed === 0 ? '0%' : (player.gamesWon / player.gamesPlayed).toLocaleString(undefined, {
+      style: 'percent',
+      maximumFractionDigits: 1
+    }));
+  }
+
+  formatLongestWinStreak(player: Player) {
+    return player.longestWinsStreak.toFixed(0);
+  }
+
+  formatFastestWin(player: Player) {
+    return (player.fastestWinSeconds / 60).toFixed(1) + ' minutes';
+  }
+
+  formatRobberRate(player: Player) {
+    return (player.totalRolls === 0 ? '0%' : (player.robberRolls / player.totalRolls).toLocaleString(undefined, {
+      style: 'percent',
+      maximumFractionDigits: 1
+    }));
+  }
 }

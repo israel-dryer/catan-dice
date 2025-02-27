@@ -13,7 +13,7 @@ import {
 import {liveQuery} from "dexie";
 import {PlayerService} from "../player.service";
 import {Player} from "../../shared/types";
-import {Router} from "@angular/router";
+import {RouterLink} from "@angular/router";
 import {addIcons} from "ionicons";
 import {personCircle, personCircleOutline, alertCircleOutline} from 'ionicons/icons'
 
@@ -22,13 +22,12 @@ import {personCircle, personCircleOutline, alertCircleOutline} from 'ionicons/ic
   templateUrl: './player-list.page.html',
   styleUrls: ['./player-list.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonButton, IonButtons, IonBackButton, IonIcon, IonText, IonLabel]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonButton, IonButtons, IonBackButton, IonIcon, IonText, IonLabel, RouterLink]
 })
 export class PlayerListPage implements OnInit {
 
   alertController = inject(AlertController);
   playerService = inject(PlayerService);
-  router = inject(Router);
   players: Player[] = [];
 
   constructor() {
@@ -61,9 +60,5 @@ export class PlayerListPage implements OnInit {
     await alert.present();
   }
 
-  async setupPlayerDetail(player: Player) {
-    this.playerService.setActivePlayer(player);
-    await this.router.navigate(['player-detail']);
-  }
 
 }

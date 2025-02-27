@@ -1,10 +1,10 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, computed, inject, model} from '@angular/core';
 import {Game} from "../../../shared/types";
 import {IonIcon, IonRippleEffect, IonText} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
 import {calendarClear, ellipse, dice, ellipseOutline, personCircle, timer} from "ionicons/icons";
 import {DatePipe} from "@angular/common";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {GameService} from "../../game.service";
 
 @Component({
@@ -18,44 +18,61 @@ import {GameService} from "../../game.service";
     IonRippleEffect
   ]
 })
-export class GameDetailCardComponent implements OnInit {
+export class GameDetailCardComponent {
 
-  @Input() game!: Game;
+  game = model<Game>();
 
-  gameTitle = 'Catan Classic';
-  gameRolls = '0 rolls';
-  gameDuration = '0 mins';
+  gameTitle = computed(() => this.formatGameTitle(this.game()));
+  gameRolls = computed(() => this.formatGameRolls(this.game()));
+  gameDuration = computed(() => this.formatGameDuration(this.game()));
 
   readonly gameService = inject(GameService);
   readonly router = inject(Router);
+  readonly route = inject(ActivatedRoute);
 
   constructor() {
     addIcons({ellipse, dice, ellipseOutline, calendarClear, timer, personCircle})
   }
 
-  ngOnInit() {
-    // game title
-    if (this.game.isCitiesKnights) {
-      this.gameTitle = 'Cities & Knights';
+  formatGameTitle(game?: Game) {
+    if (!game) {
+      return 'Catan Classic';
     }
-    if (this.game.isSeafarers) {
-      if (this.game.isCitiesKnights) {
-        this.gameTitle += ', Seafarers';
+    let title = 'Catan Classic';
+
+    if (game.isCitiesKnights) {
+      title = 'Cities & Knights';
+    }
+    if (game.isSeafarers) {
+      if (game.isCitiesKnights) {
+        title += ', Seafarers';
       } else {
-        this.gameTitle = 'Seafarers';
+        title = 'Seafarers';
       }
     }
+    return title;
+  }
 
-    // game rolls
-    this.gameRolls = this.game.rollCount.toLocaleString() + ' rolls';
+  formatGameRolls(game?: Game) {
+    if (!game) {
+      return '0 rolls';
+    }
+    return game.rollCount.toLocaleString() + ' rolls';
+  }
 
-    // game duration
-    this.gameDuration = (this.game.duration / 60).toFixed(0) + ' mins';
+  formatGameDuration(game?: Game) {
+    if (!game) {
+      return '0 mins';
+    }
+    return (game.duration / 60).toFixed(0) + ' mins';
   }
 
   async handleItemClicked() {
-    this.gameService.setActiveGame(this.game);
-    await this.router.navigate(['game-detail'])
+    const game = this.game();
+    if (game) {
+      this.gameService.setActiveGame(game);
+    }
+    await this.router.navigate(['game-detail']);
   }
 
 }

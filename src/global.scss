@@ -9,6 +9,11 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
+/* Swiper classes */
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+
 /* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
 
@@ -67,6 +72,14 @@ ion-title {
   font-family: 'Crimson Pro', sans-serif; font-size: 2rem;
 }
 
+.md .sd-swiper-slide {
+  height: calc(100vh - 120px);
+}
+
+.ios .sd-swiper-slide {
+  height: calc(100vh - 100px);
+}
+
 
 @media (prefers-color-scheme: dark) {
   .md .sd-tabs-border {
@@ -78,6 +91,7 @@ ion-title {
     font-style: italic;
   }
 }
+
 
 
 
