@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
     if (Capacitor.isNativePlatform()) {
       const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
       await EdgeToEdge.setBackgroundColor({color});
-      await StatusBar.setBackgroundColor({color});
+      await StatusBar.setBackgroundColor({color: '#00ff00'});
     }
 
     // sound assets

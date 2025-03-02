@@ -1,27 +1,25 @@
-<ion-header>
-  <div class="header-row">
-    <div class="next-player ion-text-uppercase">
+<ion-header [translucent]="false">
+  <ion-toolbar>
+    <div slot="start" class="next-player ion-text-uppercase">
       <ion-text color="medium">Next</ion-text>
       <ion-text style="font-size: 1.2rem; font-weight: bold;" color="primary">
         {{ playService.nextPlayer?.name }}
       </ion-text>
     </div>
-    <div class="ion-text-center ion-text-uppercase" style="align-items: center; grid-column: 2;">
-      <div style="font-size: 2.2rem; font-weight: bold">
-        {{ this.playService.diceTotal }}
-      </div>
-    </div>
-    <div class="prev-player ion-text-end ion-text-uppercase" style="grid-column: 3">
+    <ion-title class="sd-dice-total">
+      {{ this.playService.diceTotal }}
+    </ion-title>
+    <div slot="end" class="prev-player ion-text-end ion-text-uppercase" style="grid-column: 3">
       <ion-text color="medium">Prev</ion-text>
       @if (playService.prevPlayer) {
         <ion-text color="secondary" style="font-size: 1.2rem; font-weight: bold;">{{ playService.prevPlayer.name }}
         </ion-text>
       }
     </div>
-  </div>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content style="position: relative;">
+<ion-content style="position: relative;" fullscreen>
   <div class="sd-tap-alert" *ngIf="playService.rollCount === 0">
     <span>Tap to roll the dice</span>
   </div>
@@ -100,32 +98,35 @@
 </ion-content>
 
 <ion-footer>
-  <div class="button-row">
+  <ion-toolbar>
     <!-- Reports button-->
-    <ion-button fill="clear" color="secondary" [routerLink]="['detail']" aria-label="Show reports">
-      <ion-icon size="large" slot="icon-only" name="chart"></ion-icon>
+    <ion-button style="--border-radius: 0;" slot="start" fill="clear" color="secondary" [routerLink]="['detail']"
+                aria-label="Show reports">
+      <ion-icon size="large" slot="icon-only" name="chart" style="padding-left: .5rem"></ion-icon>
     </ion-button>
     <!-- Game statistics-->
-    <ion-text style="font-size: 1.1rem;" color="secondary">{{ playService.rollCount | number }}
-      <span>roll</span><span *ngIf="playService.rollCount > 1 || playService.rollCount < 1">s</span>
-    </ion-text>
-
-    @if (playService.activeGame) {
-      <ion-text style="font-size: 1.1rem;" *ngIf="playService.activeGame" color="secondary">
-        <span *ngIf="elapsedHours > 0">{{ elapsedHours | number: "1.0-0" }}:</span>
-        <span>{{ elapsedMinutes | number: "2.0-0" }}:</span>
-        <span>{{ elapsedSeconds | number: "2.0-0" }}</span>
+    <div class="sd-footer-stats">
+      <ion-text color="secondary">{{ playService.rollCount | number }}
+        <span>roll</span><span *ngIf="playService.rollCount > 1 || playService.rollCount < 1">s</span>
       </ion-text>
-    }
+
+      @if (playService.activeGame) {
+        <ion-text *ngIf="playService.activeGame" color="secondary">
+          <span *ngIf="elapsedHours > 0">{{ elapsedHours | number: "1.0-0" }}:</span>
+          <span>{{ elapsedMinutes | number: "2.0-0" }}:</span>
+          <span>{{ elapsedSeconds | number: "2.0-0" }}</span>
+        </ion-text>
+      }
+    </div>
 
     <!-- Game settings button & action sheet-->
-    <ion-button fill="clear" color="secondary" id="present-settings" aria-label="App menu">
-      <ion-icon size="large" slot="icon-only" name="menu"></ion-icon>
+    <ion-button style="--border-radius: 0;" slot="end" fill="clear" color="secondary" id="present-settings" aria-label="App menu">
+      <ion-icon size="large" slot="icon-only" name="menu" style="padding-right: .5rem;"></ion-icon>
     </ion-button>
     <ion-action-sheet trigger="present-settings"
                       (ionActionSheetDidDismiss)="handleActionSheetDidDismiss($event)"
                       [buttons]="actionSheetButtons"/>
-  </div>
+  </ion-toolbar>
 </ion-footer>
 
 <ion-modal [isOpen]="isRobberModalOpen"
@@ -134,7 +135,8 @@
            [backdropDismiss]="false">
   <ng-template>
     <div class="modal-content" style="position: relative;">
-      <img rel="preload" style="width: 100%; height: auto; transform: scale(1.5)" ngSrc="assets/images/sinister-robber.png"
+      <img rel="preload" style="width: 100%; height: auto; transform: scale(1.5)"
+           ngSrc="assets/images/sinister-robber.png"
            alt="sinister robber" height="1024" width="1024">
       <div
         style="background-color: var(--md-surface); position: absolute; top: 0; width: 100%; opacity: 0.95; text-align: center; padding: 1rem">
@@ -157,7 +159,8 @@
            (didDismiss)="playService.resetBarbarians()" [backdropDismiss]="false" (click)="dismissBarbarianModal()">
   <ng-template>
     <div class="modal-content" style="position: relative;">
-      <img rel="preload" style="width: 100%; height: auto; transform: scale(1.9)" ngSrc="assets/images/barbarians-attack.png"
+      <img rel="preload" style="width: 100%; height: auto; transform: scale(1.9)"
+           ngSrc="assets/images/barbarians-attack.png"
            alt="barbarians attack" height="1024" width="1024">
       <div
         style="background-color: var(--md-surface); position: absolute; top: 0; width: 100%; opacity: 0.95; text-align: center; padding: 1rem">
@@ -203,7 +206,8 @@
            (didDismiss)="dismissGameOverModal()" [backdropDismiss]="false" (click)="dismissGameOverModal()">
   <ng-template>
     <div class="modal-content" style="position: relative;">
-      <img rel="preload" style="width: 100%; height: auto; transform: scale(1.25)" ngSrc="assets/images/villagers-playing-catan-2.png"
+      <img rel="preload" style="width: 100%; height: auto; transform: scale(1.25)"
+           ngSrc="assets/images/villagers-playing-catan-2.png"
            alt="game over" height="1024" width="1024">
       <div
         style="background-color: var(--md-surface); position: absolute; top: 0; width: 100%; opacity: 0.95; text-align: center; padding: 1rem">
