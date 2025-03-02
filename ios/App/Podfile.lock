@@ -18,8 +18,6 @@ PODS:
     - Capacitor
   - CapacitorStatusBar (7.0.0):
     - Capacitor
-  - CapgoNativeAudio (7.1.8):
-    - Capacitor
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -32,7 +30,6 @@ DEPENDENCIES:
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
-  - "CapgoNativeAudio (from `../../node_modules/@capgo/native-audio`)"
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -55,8 +52,6 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/splash-screen"
   CapacitorStatusBar:
     :path: "../../node_modules/@capacitor/status-bar"
-  CapgoNativeAudio:
-    :path: "../../node_modules/@capgo/native-audio"
 
 SPEC CHECKSUMS:
   Capacitor: de199cba6c8b20995428ad0b7cb0bc6ca625ffd4
@@ -69,8 +64,7 @@ SPEC CHECKSUMS:
   CapacitorPreferences: 8e4bef1f937fc991a19d7ea99330c36a62edd24b
   CapacitorSplashScreen: 7e7a0a1113833032f196b3af6fa437baccacf5bc
   CapacitorStatusBar: a8c4c83ed2e973bdafb979e80e4b00d027832cb7
-  CapgoNativeAudio: e4fb67e7a066bb324dcee128d0eb6d7ac6d4c155
 
-PODFILE CHECKSUM: e641f9352db60a77b033afb2e4e57ef76519e755
+PODFILE CHECKSUM: c625d15b97e1e0d81d3a4ecb2d55b59b2c5f09fc
 
 COCOAPODS: 1.16.2
