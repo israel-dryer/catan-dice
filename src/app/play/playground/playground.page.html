@@ -193,30 +193,35 @@
     </ion-modal>
 
     <ion-modal
+      *ngIf="game.isCitiesKnights === 1"
       #alchemyModal
       (didPresent)="playService.playAlchemyBubbles()"
       (didDismiss)="handleAlchemyDialogDidDismiss($event)"
-      style="--height: auto; --width: auto; --border-radius: 8px"
+      style="--height: auto; --width: auto; --border-radius: 8px; overflow: hidden;"
       trigger="present-alchemy-modal">
       <ng-template>
-        <div class="modal-content">
-          <ion-content class="ion-padding" style="box-sizing: border-box">
-            <ion-text
-              style="font-weight: bold; font-size: 1.5rem; margin-bottom: 2rem; display: block; text-align: center; font-family: 'Crimson Pro', serif;">
+        <div class="modal-content" style="position: relative;">
+
+          <div
+            style="background-color: var(--md-surface); position: absolute; top: 0; width: 100%; opacity: 0.95; text-align: center; padding: 1rem">
+            <ion-text style="font-weight: bold; font-size: 1.5rem; font-family: 'Crimson Pro', serif">
               The Alchemist
             </ion-text>
+          </div>
+          <div
+            style="display: grid; place-content: center; height: 100%; width: 100%; background-color: var(--md-secondaryContainer)">
             <div class="picker-container">
               <app-alchemy-picker color="danger" #red></app-alchemy-picker>
               <app-alchemy-picker color="warning" #gold></app-alchemy-picker>
-              <ion-button
-                class="ion-margin picker-confirm"
-                color="primary"
-                role="button"
-                (click)="alchemyModal.dismiss({ dice1: red.value, dice2: gold.value }, 'confirm')">
-                <ion-label>Roll Dice</ion-label>
-              </ion-button>
             </div>
-          </ion-content>
+          </div>
+          <div
+            style="background-color: var(--md-surface); position: absolute; bottom: 0; width: 100%; opacity: 0.8; text-align: center;">
+            <ion-button expand="full" fill="text" color="primary"
+                        (click)="alchemyModal.dismiss({ dice1: red.value, dice2: gold.value }, 'confirm')">
+              <ion-text color="primary">Roll Dice</ion-text>
+            </ion-button>
+          </div>
         </div>
       </ng-template>
     </ion-modal>
