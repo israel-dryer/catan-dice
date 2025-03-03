@@ -27,7 +27,7 @@ export class PlayService {
   state = signal<GameState | undefined>(undefined);
 
   // Other
-  diceTotal = signal<number|undefined>(undefined);
+  diceTotal = signal<number | undefined>(undefined);
   barbariansAttack = signal(false);
   diceActionResult = signal<ActionDiceResult | undefined>(undefined);
   robberStealing = signal(false);
@@ -48,6 +48,14 @@ export class PlayService {
   }
 
   async startGame(game: Game) {
+    // reset live state
+    this.diceTotal.set(undefined);
+    this.barbariansAttack.set(false);
+    this.diceActionResult.set(undefined);
+    this.robberStealing.set(false);
+    this.isRolling.set(false);
+
+    // set game state
     this.activeGame.set(game);
     this.state.set(game.state);
     if (game.state.lastRoll) {
