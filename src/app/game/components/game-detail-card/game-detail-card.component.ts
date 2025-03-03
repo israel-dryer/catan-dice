@@ -57,7 +57,7 @@ export class GameDetailCardComponent {
     if (!game) {
       return '0 rolls';
     }
-    return game.rollCount.toLocaleString() + ' rolls';
+    return game.state.rollCount.toLocaleString() + ' rolls';
   }
 
   formatGameDuration(game?: Game) {

@@ -1,9 +1,9 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
   AlertController, IonActionSheet,
-  IonButton, IonButtons,
+  IonButton,
   IonContent, IonFooter,
   IonHeader, IonIcon, IonLabel, IonModal, IonText,
   IonTitle,
@@ -28,7 +28,7 @@ const ROLL_DURATION = 750;
   templateUrl: './playground.page.html',
   styleUrls: ['./playground.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonActionSheet, RouterLink, IonIcon, IonText, IonFooter, BarbarianTrackComponent, StandardDieComponent, ActionDieComponent, IonLabel, AlchemyPickerComponent, IonButtons, IonModal, NgOptimizedImage],
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonActionSheet, RouterLink, IonIcon, IonText, IonFooter, BarbarianTrackComponent, StandardDieComponent, ActionDieComponent, IonLabel, AlchemyPickerComponent, IonModal, NgOptimizedImage],
   animations: [
     trigger('jiggleRed', [
       state('active', style({})),
@@ -68,7 +68,7 @@ const ROLL_DURATION = 750;
     ]),
   ]
 })
-export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnDestroy {
+export class PlaygroundPage implements ViewWillEnter, ViewWillLeave, OnDestroy {
 
   readonly alertController = inject(AlertController);
   readonly playService = inject(PlayService);
@@ -104,12 +104,8 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
     if (this.isDarkTheme) {
       this.headerColor = getComputedStyle(document.documentElement).getPropertyValue('--md-surfaceContainerHigh');
     } else {
-      this.headerColor = getComputedStyle(document.documentElement).getPropertyValue('--md-surfaceContainer');
+      this.headerColor = getComputedStyle(document.documentElement).getPropertyValue('--md-surfaceBright');
     }
-  }
-
-  async ngOnInit() {
-    await this.playService.initializeGameData();
   }
 
   ngOnDestroy() {
@@ -139,15 +135,15 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
     await this.playService.useRollHaptic();
     await this.playService.playSoundRollingDice();
     await this.playService.rollDice(alchemyDice);
-    if (this.playService.barbariansAttack) {
+    if (this.playService.barbariansAttack()) {
       await this.playService.playSoundBarbarianAttack();
       this.isBarbarianModalOpen = true;
-    } else if (this.playService.robberStealing) {
+    } else if (this.playService.robberStealing()) {
       await this.playService.playSoundRobberLaugh();
       this.isRobberModalOpen = true;
       this.playService.resetRobberStealing();
     } else {
-      setTimeout(async () => await this.playService.announceRollResult(this.playService.diceTotal.toString()), 500);
+      setTimeout(async () => await this.playService.announceRollResult(this.playService.diceTotal().toString()), 500);
 
     }
     setTimeout(() => this.playService.isRolling.set(false), ROLL_DURATION);
@@ -169,7 +165,7 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
     } else if (data.action === 'end') {
       await this.showSelectWinnerAlert();
     } else if (data.action === 'undo') {
-      if (this.playService.activeGame?.lastRoll) {
+      if (this.playService.state()?.lastRoll) {
         await this.playService.undoLastRoll();
       }
     } else if (data.action === 'settings') {
@@ -189,8 +185,9 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
   }
 
   async showSelectWinnerAlert() {
-    if (!this.playService.activeGame) return;
-    const alertInputs: AlertInput[] = this.playService.activeGame.roster.map(player => ({
+    const game = this.playService.activeGame();
+    if (!game) return;
+    const alertInputs: AlertInput[] = game.roster.map(player => ({
       label: player.name,
       type: 'radio',
       value: {id: player.id, name: player.name},
@@ -203,7 +200,7 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
     });
     alert.onDidDismiss().then(async ({data, role}) => {
       if (role !== 'submit') return;
-      const game = Object.assign({}, this.playService.activeGame);
+      const game = Object.assign({}, this.playService.activeGame());
       await this.playService.endGame(data.values);
       if (game.winnerId) {
         await this.playService.endGame(data.values);
@@ -214,7 +211,7 @@ export class PlaygroundPage implements OnInit, ViewWillEnter, ViewWillLeave, OnD
   }
 
   updateDurationDisplay() {
-    const game = this.playService.activeGame;
+    const game = this.playService.activeGame();
     if (!game) {
       return;
     }

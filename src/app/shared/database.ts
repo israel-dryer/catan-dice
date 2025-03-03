@@ -40,20 +40,35 @@ export class AppDb extends Dexie {
 
   async backupData() {
     await Preferences.clear();
+    await this.backupGames();
+    await this.backupPlayers();
+    await this.backupRolls();
+    await this.backupSettings();
+    await this.backupUserPlayer();
+  }
 
-    // fetch game data
-    const games = await this.games.toArray();
+  async backupPlayers() {
     const players = await this.players.toArray();
-    const settings = await this.settings.toArray();
-    const rolls = await this.rolls.toArray();
-    const userPlayer = localStorage.getItem('SettlersDice.userPlayer');
-
-    // save all data
-    await Preferences.set({key: 'games', value: JSON.stringify(games)});
     await Preferences.set({key: 'players', value: JSON.stringify(players)});
-    await Preferences.set({key: 'rolls', value: JSON.stringify(rolls)});
-    await Preferences.set({key: 'settings', value: JSON.stringify(settings)});
+  }
 
+  async backupGames() {
+    const games = await this.games.toArray();
+    await Preferences.set({key: 'games', value: JSON.stringify(games)});
+  }
+
+  async backupSettings() {
+    const settings = await this.settings.toArray();
+    await Preferences.set({key: 'settings', value: JSON.stringify(settings)});
+  }
+
+  async backupRolls() {
+    const rolls = await this.rolls.toArray();
+    await Preferences.set({key: 'rolls', value: JSON.stringify(rolls)});
+  }
+
+  async backupUserPlayer() {
+    const userPlayer = localStorage.getItem('SettlersDice.userPlayer');
     if (userPlayer) {
       await Preferences.set({key: 'userPlayer', value: userPlayer});
     }

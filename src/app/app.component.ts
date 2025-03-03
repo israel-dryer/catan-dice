@@ -1,8 +1,8 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {IonApp, IonRouterOutlet, Platform} from '@ionic/angular/standalone';
 import {addIcons} from "ionicons";
 import {removeCircleOutline, trash} from "ionicons/icons";
-import {StatusBar} from "@capacitor/status-bar";
+import {StatusBar, Style} from "@capacitor/status-bar";
 import {Capacitor} from "@capacitor/core";
 import {KeepAwake} from "@capacitor-community/keep-awake";
 import {EdgeToEdge} from "@capawesome/capacitor-android-edge-to-edge-support";
@@ -10,13 +10,12 @@ import {db} from './shared/database';
 import {register} from 'swiper/element/bundle';
 
 
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   imports: [IonApp, IonRouterOutlet],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   readonly platform = inject(Platform);
 
@@ -31,7 +30,8 @@ export class AppComponent implements OnInit {
     if (Capacitor.isNativePlatform()) {
       const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
       await EdgeToEdge.setBackgroundColor({color});
-      await StatusBar.setBackgroundColor({color: '#00ff00'});
+      await StatusBar.setBackgroundColor({color: color});
+      await StatusBar.setStyle({style: Style.Default});
     }
 
     // keep away
@@ -43,8 +43,13 @@ export class AppComponent implements OnInit {
     }
   }
 
+  async ngOnDestroy() {
+    await db.backupData();
+  }
+
   async initializeIcons() {
     addIcons({
+      'random': 'assets/svg/sd-random.svg',
       'chart': 'assets/svg/sd-chart.svg',
       'burning-house': 'assets/svg/sd-fire.svg',
       'play': 'assets/svg/sd-play.svg',

@@ -7,7 +7,6 @@ export enum ActionDiceImage {
   GREEN = 'assets/images/cities-knights-green.svg',
 }
 
-
 export interface Histogram {
   [index: number]: number;
 
@@ -58,22 +57,39 @@ export interface Roll {
   turnIndex: number;
 }
 
+export interface GameState {
+  rollCount: number;
+  nextIndex: number;
+  prevIndex: number | null;
+  nextPlayer: RosterPlayer | undefined;
+  prevPlayer: RosterPlayer | undefined;
+  lastRoll: Roll | undefined;
+  dice1Result: number;
+  dice2Result: number;
+  barbarianCount: number;
+  barbariansAttack: boolean;
+  robberStealing: boolean;
+  canShowRobber: boolean;
+  fairDiceCollection: number[][];
+}
+
 export interface Game {
   id?: number;
   useFairDice: Bool;
   histogram: Histogram;
-  lastRoll?: Roll;
   createdOn: number;
   completedOn?: number;
   duration: number;
   winnerId?: number;
   winnerName?: string;
-  turnIndex: number;
-  rollCount: number;
-  barbarianCount: number;
   isSeafarers: Bool;
   isCitiesKnights: Bool;
   roster: RosterPlayer[];
+  state: GameState;
+  // turnIndex: number;
+  // rollCount: number;
+  // barbarianCount: number;
+  // lastRoll?: Roll;
 }
 
 export interface Settings {
@@ -89,11 +105,4 @@ export enum ActionDiceResult {
   BLUE = "Blu",
   GREEN = "Grn",
   GOLD = "Gld"
-}
-
-export interface GameData {
-  games: Game[];
-  players: Player[];
-  rolls: Roll[];
-  settings: Settings;
 }

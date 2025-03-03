@@ -40,31 +40,49 @@ export class GameService {
     isSeafarers: Bool = 0,
     isCitiesKnights: Bool = 0
   ) {
+    const _nextPlayer = roster[turnIndex];
     const game: Game = {
       useFairDice,
       histogram: createHistogram(),
       createdOn: new Date().valueOf(),
       duration: 0,
-      turnIndex,
-      rollCount: 0,
-      barbarianCount: 0,
       isSeafarers,
       isCitiesKnights,
-      roster
+      roster,
+      state: {
+        rollCount: 0,
+        nextIndex: turnIndex,
+        prevIndex: null,
+        dice1Result: 0,
+        dice2Result: 0,
+        barbariansAttack: false,
+        robberStealing: false,
+        canShowRobber: false,
+        fairDiceCollection: [],
+        nextPlayer: {id: _nextPlayer.id, name: _nextPlayer.name},
+        prevPlayer: undefined,
+        lastRoll: undefined,
+        barbarianCount: 0
+      }
     };
     game.id = await db.games.add(game);
+    await db.backupGames();
     return game;
   }
 
-  updateGame(id: number, changes: Record<string, any>) {
-    return db.games.update(id, changes);
+  async updateGame(id: number, changes: Record<string, any>) {
+    const result = db.games.update(id, changes);
+    await db.backupGames();
+    return result;
   }
 
   async deleteGame(id: number) {
     await db.games.delete(id);
     const rolls = await db.rolls.where({gameId: id}).toArray();
     const rollIds = rolls.map(r => r.id!);
-    return db.rolls.bulkDelete(rollIds);
+    await db.rolls.bulkDelete(rollIds);
+    await db.backupGames();
+    await db.backupRolls();
   }
 
   getGame(id: number) {
@@ -92,11 +110,8 @@ export class GameService {
       gameId, playerId, playerName, turnIndex, dice1, dice2, total, diceAction, isRobber
     }
     roll.id = await db.rolls.add(roll);
+    await db.backupRolls();
     return roll;
-  }
-
-  async getRoll(id: number) {
-    return db.rolls.get(id);
   }
 
   async getRollsByGameId(gameId: number) {
@@ -110,20 +125,8 @@ export class GameService {
       .last();
   }
 
-  async getRollsByPlayerId(playerId: number) {
-    return db.rolls.where({playerId}).toArray();
-  }
-
-  async getRobberRollsByPlayer(playerId: number) {
-    return db.rolls.where({playerId, isRobber: 1}).toArray();
-  }
-
   async deleteRoll(id: number) {
-    return db.rolls.delete(id);
+    await db.rolls.delete(id);
+    await db.backupRolls();
   }
-
-  async updateRoll(id: number, changes: Record<string, any>) {
-    return db.rolls.update(id, changes);
-  }
-
 }

@@ -66,6 +66,13 @@
             Use Fair Dice
           </ion-toggle>
         </ion-item>
+        <ion-item>
+          <ion-icon slot="start" name="random"></ion-icon>
+          <ion-toggle [checked]="startRandomPlayer" (ionChange)="handleStartRandomPlayer()">
+            Start Random Player
+          </ion-toggle>
+        </ion-item>
+
       </ion-list>
     </section>
   </div>

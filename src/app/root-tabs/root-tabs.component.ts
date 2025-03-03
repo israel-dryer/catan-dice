@@ -1,14 +1,10 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {
-  IonBackButton, IonButtons,
-  IonContent, IonHeader,
   IonIcon,
-  IonNav,
   IonRouterOutlet,
-  IonTab,
   IonTabBar,
   IonTabButton,
-  IonTabs, IonTitle, IonToolbar
+  IonTabs
 } from "@ionic/angular/standalone";
 import {Player} from "../shared/types";
 import {Router} from "@angular/router";

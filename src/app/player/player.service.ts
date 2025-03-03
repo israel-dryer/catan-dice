@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy, output} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {db} from "../shared/database";
 import {createHistogram} from "../shared/utilities";
 import {Player} from "../shared/types";
@@ -30,8 +30,8 @@ export class PlayerService implements OnDestroy {
     return activePlayers.length;
   }
 
-  createPlayer(name: string) {
-    return db.players.add(
+  async createPlayer(name: string) {
+    const result = await db.players.add(
       {
         name,
         isUser: 0,
@@ -47,6 +47,8 @@ export class PlayerService implements OnDestroy {
         totalRolls: 0
       }
     );
+    await db.backupPlayers();
+    return result;
   }
 
   setActivePlayer = (player: Player) => {
@@ -70,12 +72,15 @@ export class PlayerService implements OnDestroy {
     return this._activePlayer;
   }
 
-  updatePlayer(id: number, changes: Record<string, any>) {
-    return db.players.update(id, changes);
+  async updatePlayer(id: number, changes: Record<string, any>) {
+    await db.players.update(id, changes);
+    await db.backupPlayers();
   }
 
-  deactivatePlayer(id: number) {
-    return db.players.update(id, {isActive: 0});
+  async deactivatePlayer(id: number) {
+    const result = await db.players.update(id, {isActive: 0});
+    await db.backupPlayers();
+    return result;
   }
 
   getPlayer(id: number) {
@@ -102,6 +107,8 @@ export class PlayerService implements OnDestroy {
     if (id) {
       db.players.update(id, {isUser: 1});
     }
+    await db.backupUserPlayer();
+    await db.backupPlayers();
   }
 
 }

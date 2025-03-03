@@ -3,12 +3,10 @@ import {Game, Histogram, Roll} from "../../../shared/types";
 import {
   IonLabel,
   IonText,
-  ViewWillLeave
 } from "@ionic/angular/standalone";
 import {NgClass, NgIf, NgStyle} from "@angular/common";
 import {createHistogram} from "../../../shared/utilities";
 import {toObservable} from "@angular/core/rxjs-interop";
-import {ViewWillEnter} from "@ionic/angular";
 
 
 @Component({

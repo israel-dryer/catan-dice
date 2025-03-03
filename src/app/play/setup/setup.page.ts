@@ -44,6 +44,7 @@ export class SetupPage implements OnInit {
   useFairDice = false;
   isSeafarers = false;
   isCitiesKnights = false;
+  startRandomPlayer = true;
 
   constructor() {
     addIcons({informationCircle})
@@ -84,7 +85,12 @@ export class SetupPage implements OnInit {
     this.isSeafarers = !this.isSeafarers;
   }
 
+  handleStartRandomPlayer() {
+    this.startRandomPlayer = !this.startRandomPlayer;
+  }
+
   async startGame() {
+    localStorage.removeItem('SettlersDice.activeGame');
     const roster: RosterPlayer[] = [];
     this.players.forEach(player => {
       if (this.selectedRosterIds.includes(player.id!)) {
@@ -92,10 +98,16 @@ export class SetupPage implements OnInit {
       }
     });
 
+    // setup turn index;
+    let turnIndex = 0;
+    if (this.startRandomPlayer) {
+      turnIndex = Math.floor(Math.random() * this.selectedRosterIds.length);
+    }
+
     const game = await this.gameService.createGame(
       this.useFairDice ? 1 : 0,
       roster,
-      0,
+      turnIndex,
       this.isSeafarers ? 1 : 0,
       this.isCitiesKnights ? 1 : 0);
 

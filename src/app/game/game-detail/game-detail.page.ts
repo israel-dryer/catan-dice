@@ -8,7 +8,7 @@ import {
   IonContent,
   IonHeader, IonIcon,
   IonLabel,
-  IonSegment, IonSegmentButton, IonSegmentContent, IonSegmentView,
+  IonSegment, IonSegmentButton,
   IonTitle,
   IonToolbar
 } from '@ionic/angular/standalone';
