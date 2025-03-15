@@ -92,10 +92,9 @@ export class SetupPage implements OnInit {
   async startGame() {
     localStorage.removeItem('SettlersDice.activeGame');
     const roster: RosterPlayer[] = [];
-    this.players.forEach(player => {
-      if (this.selectedRosterIds.includes(player.id!)) {
-        roster.push({id: player.id!, name: player.name});
-      }
+    this.selectedRosterIds.forEach(id => {
+      const player = this.players.find(p => p.id === id)!;
+      roster.push({id, name: player.name});
     });
 
     // setup turn index;
