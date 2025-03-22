@@ -97,11 +97,6 @@ export class AppDb extends Dexie {
         await this.rolls.put(item, item.id);
       }
     }
-    if (settings.value) {
-      for (const item of JSON.parse(settings.value)) {
-        await this.settings.put(item, item.id);
-      }
-    }
     if (userPlayer.value) {
       localStorage.setItem('SettlersDice.userPlayer', userPlayer.value);
     }
