@@ -17,10 +17,10 @@ import {
 } from '@ionic/angular/standalone';
 import {Settings} from "../../shared/types";
 import {SettingsService} from "../settings.service";
-import {liveQuery} from "dexie";
 import {Router} from "@angular/router";
 import {addIcons} from "ionicons";
 import {exit, gitCommit, lockClosed, newspaper, server} from "ionicons/icons";
+import {APP_VERSION} from "../../../main";
 
 @Component({
   selector: 'app-app-settings',
@@ -32,7 +32,7 @@ import {exit, gitCommit, lockClosed, newspaper, server} from "ionicons/icons";
 export class AppSettingsPage implements OnInit {
 
   settings?: Settings;
-
+  version = inject(APP_VERSION);
   readonly router = inject(Router);
   readonly settingsService = inject(SettingsService);
   readonly alertController = inject(AlertController);
