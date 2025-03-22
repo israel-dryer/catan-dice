@@ -9,7 +9,7 @@ import {
   IonHeader, IonIcon,
   IonItem,
   IonLabel,
-  IonList,
+  IonList, IonListHeader,
   IonNote, IonText,
   IonTitle,
   IonToggle,
@@ -19,16 +19,15 @@ import {Settings} from "../../shared/types";
 import {SettingsService} from "../settings.service";
 import {liveQuery} from "dexie";
 import {Router} from "@angular/router";
-import {db} from "../../shared/database";
 import {addIcons} from "ionicons";
-import {gitCommit} from "ionicons/icons";
+import {exit, gitCommit, lockClosed, newspaper, server} from "ionicons/icons";
 
 @Component({
   selector: 'app-app-settings',
   templateUrl: './app-settings.page.html',
   styleUrls: ['./app-settings.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonLabel, IonToggle, IonButtons, IonBackButton, IonNote, IonIcon, IonText]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonLabel, IonToggle, IonButtons, IonBackButton, IonNote, IonIcon, IonText, IonListHeader]
 })
 export class AppSettingsPage implements OnInit {
 
@@ -38,42 +37,66 @@ export class AppSettingsPage implements OnInit {
   readonly settingsService = inject(SettingsService);
   readonly alertController = inject(AlertController);
 
-
-  ngOnInit() {
-    addIcons({gitCommit})
-    liveQuery(() => this.settingsService.getSettings())
-      .subscribe(settings => this.settings = settings);
+  async ngOnInit() {
+    addIcons({gitCommit, exit, newspaper, lockClosed, server})
+    this.settings = await this.settingsService.getSettings();
   }
 
-  handleSettingsChange(setting: string, event: any) {
-    const value = event.detail.checked ? 1 : 0;
+  soundEffectsChanged(event: any) {
+    const value = event.detail.checked;
     if (this.settings) {
-      const changes = Object.assign({}, this.settings) as Record<string, any>;
-      changes[setting] = value;
-      this.settingsService.updateSettings(changes);
+      this.settings.soundEffects = value;
+      this.settingsService.updateSettings({soundEffects: value ? 1 : 0});
     }
   }
 
-  async confirmDeleteAppData() {
-    const handler = async () => {
-      await db.games.clear();
-      await db.players.clear();
-      await db.rolls.clear();
-      localStorage.clear();
-      await this.router.navigate(['/']);
+  fairDiceChanged(event: any) {
+    const value = event.detail.checked;
+    if (this.settings) {
+      this.settings.fairDice = value;
+      this.settingsService.updateSettings({fairDice: value ? 1 : 0});
     }
+  }
 
+  rollAnnouncerChanged(event: any) {
+    const value = event.detail.checked;
+    if (this.settings) {
+      this.settings.rollAnnouncer = value;
+      this.settingsService.updateSettings({rollAnnouncer: value ? 1 : 0});
+    }
+  }
+
+  rollHapticsChanged(event: any) {
+    const value = event.detail.checked;
+    if (this.settings) {
+      this.settings.rollHaptics = value;
+      this.settingsService.updateSettings({rollHaptics: value ? 1 : 0});
+    }
+  }
+
+  async deleteAccount() {
     const alert = await this.alertController.create({
-      header: 'Delete App Data',
+      header: 'Delete Account',
       message: 'Are you sure? This action cannot be undone?',
-      buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Confirm', role: 'submit', handler}]
+      buttons: [{text: 'Cancel', role: 'cancel'}, {text: 'Confirm', role: 'submit'}]
     });
+    alert.onDidDismiss().then(async event => {
+      if (event.role === 'cancel') {
+        return;
+      } else {
+        // TODO delete application data on device
+        // TODO delete application data in firebase
+        // TODO remove account
+        console.log('Deleting application data');
+        await this.router.navigate(['/login'])
+      }
+    })
     await alert.present();
   }
 
-  importAppData() {
-
+  async logout() {
+    // TODO logout using auth
+    await this.router.navigate(['/login']);
   }
-
 
 }

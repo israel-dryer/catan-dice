@@ -18,9 +18,12 @@
     @if (settings) {
       <section class="sd-list-section">
         <ion-list>
+          <ion-list-header>
+            <ion-label>Application</ion-label>
+          </ion-list-header>
           <ion-item>
             <ion-icon slot="start" name="sound"></ion-icon>
-            <ion-toggle [checked]="settings.soundEffects" (ionChange)="handleSettingsChange('soundEffects', $event)">
+            <ion-toggle [checked]="settings.soundEffects" (ionChange)="soundEffectsChanged($event)">
               <ion-label>
                 <h2>Sound Effects</h2>
                 <ion-note class="ion-text-wrap">Toggle in game sound effects</ion-note>
@@ -29,7 +32,7 @@
           </ion-item>
           <ion-item>
             <ion-icon slot="start" name="distribution"></ion-icon>
-            <ion-toggle [checked]="settings.fairDice" (ionChange)="handleSettingsChange('fairDice', $event)">
+            <ion-toggle [checked]="settings.fairDice" (ionChange)="fairDiceChanged($event)">
               <ion-label>
                 <h2>Use Fair Dice</h2>
                 <ion-note class="ion-text-wrap">Guaranteed normal distribution over 36 rolls</ion-note>
@@ -38,7 +41,7 @@
           </ion-item>
           <ion-item>
             <ion-icon slot="start" name="voice"></ion-icon>
-            <ion-toggle [checked]="settings.rollAnnouncer" (ionChange)="handleSettingsChange('rollAnnouncer', $event)">
+            <ion-toggle [checked]="settings.rollAnnouncer" (ionChange)="rollAnnouncerChanged($event)">
               <ion-label>
                 <h2>Roll Announce</h2>
                 <ion-note class="ion-text-wrap">Dice result is spoken</ion-note>
@@ -47,7 +50,7 @@
           </ion-item>
           <ion-item lines="none">
             <ion-icon slot="start" name="shake"></ion-icon>
-            <ion-toggle [checked]="settings.rollHaptics" (ionChange)="handleSettingsChange('rollHaptics', $event)">
+            <ion-toggle [checked]="settings.rollHaptics" (ionChange)="rollHapticsChanged($event)">
               <ion-label>
                 <h2>Roll Haptics</h2>
                 <ion-note class="ion-text-wrap">
@@ -56,14 +59,52 @@
               </ion-label>
             </ion-toggle>
           </ion-item>
+          <ion-list-header>
+            <ion-label></ion-label>
+          </ion-list-header>
+          <ion-item href="https://dice.settlersdepot.com/privacy" detail>
+            <ion-icon slot="start" name="lock-closed"></ion-icon>
+            <ion-label>Privacy Policy</ion-label>
+          </ion-item>
+          <ion-item href="https://dice.settlersdepot.com/terms" detail>
+            <ion-icon slot="start" name="newspaper"></ion-icon>
+            <ion-label>Terms & Conditions</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="git-commit"></ion-icon>
+            <ion-label>Version
+              <ion-text color="medium">1.0.0.1</ion-text>
+            </ion-label>
+          </ion-item>
+          <!-- Not implemented -->
+          <ng-container *ngIf="false">
+            <ion-list-header>
+              <ion-label>Account</ion-label>
+            </ion-list-header>
+            <ion-item>
+              <ion-icon slot="start" name="server"></ion-icon>
+              <ion-label>
+                <h2>Restore data</h2>
+                <ion-note class="ion-text-wrap">Load data from cloud backup</ion-note>
+              </ion-label>
+            </ion-item>
+            <ion-item button (click)="deleteAccount()">
+              <ion-icon slot="start" name="trash"></ion-icon>
+              <ion-label>
+                <h2>Remove account</h2>
+                <ion-note class="ion-text-wrap">Delete user account and all data</ion-note>
+              </ion-label>
+            </ion-item>
+            <ion-item button (click)="logout()">
+              <ion-icon slot="start" name="exit"></ion-icon>
+              <ion-label>
+                <h2>Logout</h2>
+                <ion-note class="ion-text-wrap">israel.dryer&commat;gmail.com</ion-note>
+              </ion-label>
+            </ion-item>
+          </ng-container>
         </ion-list>
       </section>
-      <div style="display: grid; place-content: center; height: 50px; width: 100%; font-size: 14px;">
-        <div style="display: flex; align-items: center; gap: .5rem;">
-        <ion-icon name="git-commit"></ion-icon>
-        <ion-text color="primary">1.0.3.5_dev</ion-text>
-        </div>
-      </div>
     }
   </div>
 </ion-content>
