@@ -6,7 +6,6 @@ import {register} from 'swiper/element/bundle';
 import {AuthService} from './shared/auth.service';
 import {SyncService} from './shared/sync.service';
 
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
