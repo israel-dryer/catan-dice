@@ -2,14 +2,15 @@
   "name": "catan-dice",
   "version": "0.0.1",
   "author": "Israel Dryer",
-  "homepage": "www.tallypad.com/catandice",
+  "homepage": "https://tallypad.net/catandice",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href /catandice/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "deploy": "ng build --base-href /catandice/ && firebase deploy"
   },
   "private": true,
   "dependencies": {

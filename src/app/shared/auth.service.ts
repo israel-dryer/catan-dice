@@ -27,8 +27,10 @@ export class AuthService {
   }
 
   async sendSignInLink(email: string): Promise<void> {
+    // Get base href to support subdirectory deployment
+    const baseHref = document.querySelector('base')?.getAttribute('href') || '/';
     const actionCodeSettings = {
-      url: window.location.origin + '/login',
+      url: window.location.origin + baseHref + 'login',
       handleCodeInApp: true
     };
 
