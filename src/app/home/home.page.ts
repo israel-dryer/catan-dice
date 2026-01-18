@@ -81,7 +81,11 @@ export class HomePage implements OnInit {
   }
 
   async showCreateUserPlayerAlert() {
-    if (this.userPlayer) {
+    // Check database directly (not localStorage) to ensure we have latest synced data
+    const userPlayerFromDb = await this.playerService.getUserPlayer();
+    if (userPlayerFromDb) {
+      this.userPlayer = userPlayerFromDb;
+      localStorage.setItem('CatanDice.userPlayer', JSON.stringify(userPlayerFromDb));
       return;
     }
 
