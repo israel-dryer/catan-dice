@@ -4,7 +4,6 @@ import {FormsModule} from '@angular/forms';
 import {
   AlertController,
   IonBackButton,
-  IonButton,
   IonButtons,
   IonContent,
   IonHeader, IonIcon,
@@ -31,7 +30,7 @@ import {db} from "../../shared/database";
   templateUrl: './app-settings.page.html',
   styleUrls: ['./app-settings.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonLabel, IonToggle, IonButtons, IonBackButton, IonNote, IonIcon, IonText, IonListHeader, IonButton]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonLabel, IonToggle, IonButtons, IonBackButton, IonNote, IonIcon, IonText, IonListHeader]
 })
 export class AppSettingsPage implements OnInit {
 
