@@ -1,4 +1,5 @@
 import {Routes} from '@angular/router';
+import {authGuard} from './shared/auth.guard';
 
 export const routes: Routes = [
   {
@@ -12,10 +13,12 @@ export const routes: Routes = [
   },
   {
     path: 'game-detail',
+    canActivate: [authGuard],
     loadComponent: () => import('./game/game-detail/game-detail.page').then(m => m.GameDetailPage)
   },
   {
     path: 'tabs',
+    canActivate: [authGuard],
     loadComponent: () => import('./root-tabs/root-tabs.component').then((m => m.RootTabsComponent)),
     children: [
       {
@@ -38,6 +41,7 @@ export const routes: Routes = [
   },
   {
     path: 'playground',
+    canActivate: [authGuard],
     children: [
       {
         path: '', loadComponent: () => import('./play/playground/playground.page').then(m => m.PlaygroundPage),
@@ -54,6 +58,7 @@ export const routes: Routes = [
   },
   {
     path: 'player-detail',
+    canActivate: [authGuard],
     loadComponent: () => import('./player/player-detail/player-detail.page').then(m => m.PlayerDetailPage)
   }
 ];

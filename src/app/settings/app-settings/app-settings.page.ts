@@ -97,6 +97,7 @@ export class AppSettingsPage implements OnInit {
   async logout() {
     this.syncService.onUserLogout();
     await this.authService.signOut();
+    localStorage.removeItem('CatanDice.authSkipped');
     await this.router.navigate(['/login'], {replaceUrl: true});
   }
 

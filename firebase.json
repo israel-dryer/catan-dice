@@ -8,6 +8,10 @@
     ],
     "rewrites": [
       {
+        "source": "/catandice",
+        "destination": "/catandice/index.html"
+      },
+      {
         "source": "/catandice/**",
         "destination": "/catandice/index.html"
       }

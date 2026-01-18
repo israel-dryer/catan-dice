@@ -101,6 +101,7 @@ export class LoginPage implements OnInit {
   }
 
   continueWithoutAccount() {
+    localStorage.setItem('CatanDice.authSkipped', 'true');
     this.router.navigate(['/tabs/home'], {replaceUrl: true});
   }
 }

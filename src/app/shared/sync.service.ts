@@ -13,6 +13,8 @@ import {AuthService} from './auth.service';
 import {db} from './database';
 import {Game, Player, Roll, Settings} from './types';
 
+const APP_PREFIX = 'catandice';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,7 +25,8 @@ export class SyncService {
   private getUserCollection(collectionName: string) {
     const uid = this.authService.getUserId();
     if (!uid) throw new Error('User not authenticated');
-    return collection(firestore, 'users', uid, collectionName);
+    // Path: users/{uid}/{app}-{collection} e.g. users/abc123/catandice-players
+    return collection(firestore, 'users', uid, `${APP_PREFIX}-${collectionName}`);
   }
 
   // Remove undefined values recursively (Firestore doesn't accept undefined)
