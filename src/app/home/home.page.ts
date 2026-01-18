@@ -44,15 +44,15 @@ export class HomePage implements OnInit {
     private alertController: AlertController) {
     addIcons({checkbox, squareOutline});
 
-    const _playerCount = localStorage.getItem('SettlersDice.playerCount');
+    const _playerCount = localStorage.getItem('CatanDice.playerCount');
     if (_playerCount) {
       this.playerCount = parseInt(_playerCount);
     }
-    const _gameCount = localStorage.getItem('SettlersDice.gameCount');
+    const _gameCount = localStorage.getItem('CatanDice.gameCount');
     if (_gameCount) {
       this.gameCount = parseInt(_gameCount);
     }
-    const _userPlayer = localStorage.getItem('SettlersDice.userPlayer');
+    const _userPlayer = localStorage.getItem('CatanDice.userPlayer');
     if (_userPlayer) {
       this.userPlayer = JSON.parse(_userPlayer);
     }
@@ -60,18 +60,18 @@ export class HomePage implements OnInit {
     liveQuery(() => gameService.getGameCount())
       .subscribe(gameCount => {
         this.gameCount = gameCount;
-        localStorage.setItem('SettlersDice.gameCount', `${gameCount}`);
+        localStorage.setItem('CatanDice.gameCount', `${gameCount}`);
       });
     liveQuery(() => playerService.getPlayerCount())
       .subscribe(playerCount => {
         this.playerCount = playerCount;
-        localStorage.setItem('SettlersDice.playerCount', `${playerCount}`);
+        localStorage.setItem('CatanDice.playerCount', `${playerCount}`);
       });
     liveQuery(() => this.playerService.getUserPlayer())
       .subscribe(player => {
         this.userPlayer = player;
         if (this.userPlayer) {
-          localStorage.setItem('SettlersDice.userPlayer', JSON.stringify(this.userPlayer));
+          localStorage.setItem('CatanDice.userPlayer', JSON.stringify(this.userPlayer));
         }
       })
   }

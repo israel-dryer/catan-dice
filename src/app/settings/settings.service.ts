@@ -13,8 +13,6 @@ export class SettingsService {
   resetSettings() {
     return db.settings.update(1, {
       fairDice: 1,
-      rollHaptics: 1,
-      rollAnnouncer: 1,
       soundEffects: 1
     });
   }

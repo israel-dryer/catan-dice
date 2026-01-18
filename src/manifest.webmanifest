@@ -1,5 +1,10 @@
 {
+  "name": "Catan Dice",
+  "short_name": "Catan Dice",
   "background_color": "#B54A4E",
+  "theme_color": "#B54A4E",
+  "display": "standalone",
+  "start_url": "/",
   "icons": [
     {
       "src": "assets/icons/icon-48.webp",

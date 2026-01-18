@@ -20,7 +20,7 @@ export class GameService {
 
   async getActiveGame() {
     if (!this._activeGame) {
-      const jsonData = localStorage.getItem('SettlersDice.activeGame');
+      const jsonData = localStorage.getItem('CatanDice.activeGame');
       if (!jsonData) return;
       const game = JSON.parse(jsonData);
       this._activeGame = await this.getGame(game.id!);
@@ -30,7 +30,7 @@ export class GameService {
 
   setActiveGame(game: Game) {
     this._activeGame = game;
-    localStorage.setItem('SettlersDice.activeGame', JSON.stringify(game));
+    localStorage.setItem('CatanDice.activeGame', JSON.stringify(game));
   }
 
   async createGame(
@@ -64,13 +64,11 @@ export class GameService {
       }
     };
     game.id = await db.games.add(game);
-    await db.backupGames();
     return game;
   }
 
   async updateGame(id: number, changes: Record<string, any>) {
     const result = db.games.update(id, changes);
-    await db.backupGames();
     return result;
   }
 
@@ -79,8 +77,6 @@ export class GameService {
     const rolls = await db.rolls.where({gameId: id}).toArray();
     const rollIds = rolls.map(r => r.id!);
     await db.rolls.bulkDelete(rollIds);
-    await db.backupGames();
-    await db.backupRolls();
   }
 
   getGame(id: number) {
@@ -108,7 +104,6 @@ export class GameService {
       gameId, playerId, playerName, turnIndex, dice1, dice2, total, diceAction, isRobber
     }
     roll.id = await db.rolls.add(roll);
-    await db.backupRolls();
     return roll;
   }
 
@@ -125,6 +120,5 @@ export class GameService {
 
   async deleteRoll(id: number) {
     await db.rolls.delete(id);
-    await db.backupRolls();
   }
 }

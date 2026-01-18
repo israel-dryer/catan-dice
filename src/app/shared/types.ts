@@ -89,8 +89,6 @@ export interface Game {
 export interface Settings {
   id?: number;
   fairDice: Bool;
-  rollHaptics: Bool;
-  rollAnnouncer: Bool;
   soundEffects: Bool;
 }
 

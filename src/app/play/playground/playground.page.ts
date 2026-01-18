@@ -7,20 +7,16 @@ import {
   IonContent, IonFooter,
   IonHeader, IonIcon, IonModal, IonText,
   IonTitle,
-  IonToolbar, Platform, ViewWillLeave
+  IonToolbar
 } from '@ionic/angular/standalone';
 import {PlayService} from '../play.service';
-import {ActionSheetButton, AlertInput, ViewWillEnter} from "@ionic/angular";
+import {ActionSheetButton, AlertInput} from "@ionic/angular";
 import {Router, RouterLink} from "@angular/router";
 import {BarbarianTrackComponent} from "../components/barbarian-track/barbarian-track.component";
 import {StandardDieComponent} from "../components/standard-die/standard-die.component";
 import {ActionDieComponent} from "../components/action-die/action-die.component";
 import {AlchemyPickerComponent} from "../components/alchemy-picker/alchemy-picker.component";
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {EdgeToEdge} from "@capawesome/capacitor-android-edge-to-edge-support";
-import {StatusBar} from "@capacitor/status-bar";
-import {Capacitor} from "@capacitor/core";
-import {AdService} from "../../shared/ad.service";
 
 const ROLL_DURATION = 750;
 
@@ -69,24 +65,18 @@ const ROLL_DURATION = 750;
     ]),
   ]
 })
-export class PlaygroundPage implements ViewWillEnter, ViewWillLeave, OnDestroy {
+export class PlaygroundPage implements OnDestroy {
 
   readonly alertController = inject(AlertController);
   readonly playService = inject(PlayService);
   readonly router = inject(Router);
-  readonly platform = inject(Platform);
-  readonly adService = inject(AdService);
 
   // time duration state
   private readonly timerIntervalCallback?: any;
   elapsedHours = 0;
   elapsedMinutes = 0;
   elapsedSeconds = 0;
-  headerColor: string;
-  backgroundColor: string;
-  isIos: boolean;
   actionSheetButtons: ActionSheetButton[];
-  isDarkTheme: boolean;
   isRobberModalOpen = false;
   isBarbarianModalOpen = false;
   isGameOverModalOpen = false
@@ -95,42 +85,19 @@ export class PlaygroundPage implements ViewWillEnter, ViewWillLeave, OnDestroy {
 
   constructor() {
     this.timerIntervalCallback = setInterval(() => this.updateDurationDisplay(), 1000);
-    this.isIos = this.platform.is('ios');
     this.actionSheetButtons = [
-      {text: 'Undo Roll', data: {action: 'undo'}, icon: this.isIos ? undefined : 'undo'},
-      {text: 'End Game', data: {action: 'end'}, icon: this.isIos ? undefined : 'medal'},
-      {text: 'Cancel', role: 'cancel', data: {action: 'cancel'}, icon: this.isIos ? undefined : 'close'}
+      {text: 'Undo Roll', data: {action: 'undo'}, icon: 'undo'},
+      {text: 'End Game', data: {action: 'end'}, icon: 'medal'},
+      {text: 'Cancel', role: 'cancel', data: {action: 'cancel'}, icon: 'close'}
     ];
-    this.isDarkTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    this.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
-    this.headerColor = getComputedStyle(document.documentElement).getPropertyValue('--md-surfaceContainer');
   }
 
   ngOnDestroy() {
     clearInterval(this.timerIntervalCallback);
   }
 
-  async ionViewWillEnter() {
-    if (Capacitor.isNativePlatform()) {
-      if (this.platform.is('android')) {
-        await EdgeToEdge.setBackgroundColor({color: this.headerColor});
-      }
-      await StatusBar.setBackgroundColor({color: this.headerColor});
-    }
-  }
-
-  async ionViewWillLeave() {
-    if (Capacitor.isNativePlatform()) {
-      if (this.platform.is('android')) {
-        await EdgeToEdge.setBackgroundColor({color: this.backgroundColor});
-      }
-      await StatusBar.setBackgroundColor({color: this.backgroundColor});
-    }
-  }
-
   async rollDice(alchemyDice?: any) {
     this.playService.isRolling.set(true);
-    await this.playService.useRollHaptic();
     await this.playService.playSoundRollingDice();
     await this.playService.rollDice(alchemyDice);
     if (this.playService.barbariansAttack()) {
@@ -140,15 +107,8 @@ export class PlaygroundPage implements ViewWillEnter, ViewWillLeave, OnDestroy {
       await this.playService.playSoundRobberLaugh();
       this.isRobberModalOpen = true;
       this.playService.resetRobberStealing();
-    } else {
-      setTimeout(async () => await this.playService.announceRollResult((this.playService.diceTotal() ?? 0).toString()), 500);
-
     }
     setTimeout(() => this.playService.isRolling.set(false), ROLL_DURATION);
-    const rollCount = this.playService.state()?.rollCount ?? 0;
-    if (rollCount % 15 === 0) {
-      await this.adService.showInterstitial();
-    }
   }
 
   async handleAlchemyDialogDidDismiss({detail}: any) {

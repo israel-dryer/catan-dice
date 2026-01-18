@@ -1,14 +1,8 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {IonApp, IonRouterOutlet, Platform} from '@ionic/angular/standalone';
+import {Component, OnInit} from '@angular/core';
+import {IonApp, IonRouterOutlet} from '@ionic/angular/standalone';
 import {addIcons} from "ionicons";
-import {removeCircleOutline, trash} from "ionicons/icons";
-import {StatusBar, Style} from "@capacitor/status-bar";
-import {Capacitor} from "@capacitor/core";
-import {KeepAwake} from "@capacitor-community/keep-awake";
-import {EdgeToEdge} from "@capawesome/capacitor-android-edge-to-edge-support";
-import {db} from './shared/database';
+import {trash} from "ionicons/icons";
 import {register} from 'swiper/element/bundle';
-import {AdService} from "./shared/ad.service";
 
 
 @Component({
@@ -16,44 +10,14 @@ import {AdService} from "./shared/ad.service";
   templateUrl: 'app.component.html',
   imports: [IonApp, IonRouterOutlet],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
 
-  readonly platform = inject(Platform);
-
-  constructor(adService: AdService) {
-    adService.initialize();
+  constructor() {
     register();
   }
 
   async ngOnInit() {
     await this.initializeIcons();
-    await db.restoreFromBackup();
-    if (Capacitor.isNativePlatform()) {
-      const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-background-color');
-      await EdgeToEdge.setBackgroundColor({color});
-
-      const isDarkTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
-      await StatusBar.setBackgroundColor({color: color});
-      setTimeout(() => {
-        if (isDarkTheme) {
-          StatusBar.setStyle({style: Style.Dark});
-        } else {
-          StatusBar.setStyle({style: Style.Light});
-        }
-      }, 1000);
-    }
-
-    // keep away
-    const keepAwakeSupported = await KeepAwake.isSupported();
-    if (keepAwakeSupported) {
-      await KeepAwake.keepAwake();
-    } else {
-      console.log('Keep Awake not supported');
-    }
-  }
-
-  async ngOnDestroy() {
-    await db.backupData();
   }
 
   async initializeIcons() {
@@ -84,7 +48,7 @@ export class AppComponent implements OnInit, OnDestroy {
       'tune': 'assets/svg/sd-tune.svg',
       'flask': 'assets/svg/sd-test-tube.svg',
       'history': 'assets/svg/sd-history.svg',
-      'trash': this.platform.is('ios') ? removeCircleOutline : trash,
+      'trash': trash,
       'trophy': 'assets/svg/sd-trophy.svg',
       'undo': 'assets/svg/sd-undo.svg',
       'upload': 'assets/svg/sd-upload.svg',

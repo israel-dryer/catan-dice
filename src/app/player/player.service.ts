@@ -15,7 +15,7 @@ export class PlayerService implements OnDestroy {
   readonly activePlayerChanged = new BehaviorSubject<Player|undefined>(undefined);
 
   constructor() {
-    const activePlayer = localStorage.getItem('SettlersDice.activePlayer');
+    const activePlayer = localStorage.getItem('CatanDice.activePlayer');
     if (activePlayer) {
       this.setActivePlayer(JSON.parse(activePlayer));
     }
@@ -47,14 +47,13 @@ export class PlayerService implements OnDestroy {
         totalRolls: 0
       }
     );
-    await db.backupPlayers();
     return result;
   }
 
   setActivePlayer = (player: Player) => {
     this._activePlayer = player;
     if (this._activePlayer) {
-      localStorage.setItem('SettlersDice.activePlayer', JSON.stringify(player));
+      localStorage.setItem('CatanDice.activePlayer', JSON.stringify(player));
       this.activePlayerSub?.unsubscribe();
       this.activePlayerSub = liveQuery(() => this.getPlayer(this._activePlayer!.id!))
         .subscribe(player => {
@@ -74,12 +73,10 @@ export class PlayerService implements OnDestroy {
 
   async updatePlayer(id: number, changes: Record<string, any>) {
     await db.players.update(id, changes);
-    await db.backupPlayers();
   }
 
   async deactivatePlayer(id: number) {
     const result = await db.players.update(id, {isActive: 0});
-    await db.backupPlayers();
     return result;
   }
 
@@ -107,8 +104,6 @@ export class PlayerService implements OnDestroy {
     if (id) {
       db.players.update(id, {isUser: 1});
     }
-    await db.backupUserPlayer();
-    await db.backupPlayers();
   }
 
 }

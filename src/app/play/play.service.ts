@@ -3,9 +3,6 @@ import {GameService} from "../game/game.service";
 import {SettingsService} from '../settings/settings.service';
 import {StatisticsService} from "../shared/statistics.service";
 import {ActionDiceResult, Game, GameState, Roll, RosterPlayer, Settings} from "../shared/types";
-import {TextToSpeech} from "@capacitor-community/text-to-speech";
-import {Haptics, ImpactStyle} from "@capacitor/haptics";
-import {db} from '../shared/database';
 import {liveQuery} from "dexie";
 import {AudioService} from "../shared/audio.service";
 
@@ -121,7 +118,6 @@ export class PlayService {
       for (const id of playerIds) {
         await this.statisticService.updatePlayerStatsById(id);
       }
-      await db.backupData();
     }
   }
 
@@ -373,16 +369,6 @@ export class PlayService {
     } catch (e) {
       console.log(e);
     }
-  }
-
-  async announceRollResult(value: string) {
-    if (!this.settings()!.rollAnnouncer) return;
-    await TextToSpeech.speak({text: value});
-  }
-
-  async useRollHaptic() {
-    if (!this.settings()!.rollHaptics) return;
-    await Haptics.impact({style: ImpactStyle.Medium});
   }
 
 }

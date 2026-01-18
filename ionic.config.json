@@ -1,7 +1,5 @@
 {
-  "name": "Settlers Dice",
-  "integrations": {
-    "capacitor": {}
-  },
+  "name": "Catan Dice",
+  "integrations": {},
   "type": "angular-standalone"
 }

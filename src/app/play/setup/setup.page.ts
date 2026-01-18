@@ -90,7 +90,7 @@ export class SetupPage implements OnInit {
   }
 
   async startGame() {
-    localStorage.removeItem('SettlersDice.activeGame');
+    localStorage.removeItem('CatanDice.activeGame');
     const roster: RosterPlayer[] = [];
     this.selectedRosterIds.forEach(id => {
       const player = this.players.find(p => p.id === id)!;
