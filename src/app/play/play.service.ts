@@ -5,6 +5,7 @@ import {StatisticsService} from "../shared/statistics.service";
 import {ActionDiceResult, Game, GameState, Roll, RosterPlayer, Settings} from "../shared/types";
 import {liveQuery} from "dexie";
 import {AudioService} from "../shared/audio.service";
+import {SpeechService} from "../shared/speech.service";
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class PlayService {
   settingsService = inject(SettingsService);
   statisticService = inject(StatisticsService);
   audioService = inject(AudioService);
+  speechService = inject(SpeechService);
 
   // Game properties
   activeGame = signal<Game | undefined>(undefined);
@@ -331,6 +333,15 @@ export class PlayService {
       await this.audioService.playSound('gameOver');
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async announceRoll(total: number) {
+    if (!this.settings()?.rollAnnouncer) return;
+    try {
+      await this.speechService.speak(total.toString());
+    } catch (e) {
+      console.log('Roll announcer error:', e);
     }
   }
 

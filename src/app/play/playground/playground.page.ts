@@ -108,7 +108,13 @@ export class PlaygroundPage implements OnDestroy {
       this.isRobberModalOpen = true;
       this.playService.resetRobberStealing();
     }
-    setTimeout(() => this.playService.isRolling.set(false), ROLL_DURATION);
+    setTimeout(async () => {
+      this.playService.isRolling.set(false);
+      const total = this.playService.diceTotal();
+      if (total) {
+        await this.playService.announceRoll(total);
+      }
+    }, ROLL_DURATION);
   }
 
   async handleAlchemyDialogDidDismiss({detail}: any) {

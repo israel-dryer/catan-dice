@@ -90,6 +90,7 @@ export interface Settings {
   id?: number;
   fairDice: Bool;
   soundEffects: Bool;
+  rollAnnouncer: Bool;
 }
 
 export enum ActionDiceResult {

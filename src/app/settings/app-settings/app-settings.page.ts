@@ -66,6 +66,14 @@ export class AppSettingsPage implements OnInit {
     }
   }
 
+  rollAnnouncerChanged(event: any) {
+    const value = event.detail.checked;
+    if (this.settings) {
+      this.settings.rollAnnouncer = value;
+      this.settingsService.updateSettings({rollAnnouncer: value ? 1 : 0});
+    }
+  }
+
   async deleteAccount() {
     const alert = await this.alertController.create({
       header: 'Delete Account',

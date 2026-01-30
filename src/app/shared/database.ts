@@ -26,7 +26,8 @@ export class AppDb extends Dexie {
       // add default settings
       this.settings.add({
         fairDice: 0,
-        soundEffects: 1
+        soundEffects: 1,
+        rollAnnouncer: 0
       });
     });
   }
