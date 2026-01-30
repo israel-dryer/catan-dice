@@ -1,5 +1,5 @@
 // Service worker for PWA
-const CACHE_NAME = 'catan-dice-v0.4.0';
+const CACHE_NAME = 'catan-dice-v0.5.0';
 
 self.addEventListener('install', (event) => {
   // Skip waiting to activate new service worker immediately
