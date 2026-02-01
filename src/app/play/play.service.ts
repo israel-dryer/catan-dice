@@ -338,6 +338,7 @@ export class PlayService {
 
   async announceRoll(total: number) {
     if (!this.settings()?.rollAnnouncer) return;
+    if (total === 7) return; // Skip announcing robber/barbarian rolls
     try {
       await this.speechService.speak(total.toString());
     } catch (e) {
