@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {
@@ -17,6 +17,7 @@ import {StandardDieComponent} from "../components/standard-die/standard-die.comp
 import {ActionDieComponent} from "../components/action-die/action-die.component";
 import {AlchemyPickerComponent} from "../components/alchemy-picker/alchemy-picker.component";
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
+import {WakeLockService} from '../../shared/wakelock.service';
 
 const ROLL_DURATION = 750;
 
@@ -65,14 +66,16 @@ const ROLL_DURATION = 750;
     ]),
   ]
 })
-export class PlaygroundPage implements OnDestroy {
+export class PlaygroundPage implements OnInit, OnDestroy {
 
   readonly alertController = inject(AlertController);
   readonly playService = inject(PlayService);
   readonly router = inject(Router);
+  readonly wakeLockService = inject(WakeLockService);
 
   // time duration state
   private readonly timerIntervalCallback?: any;
+  private readonly visibilityChangeHandler: () => void;
   elapsedHours = 0;
   elapsedMinutes = 0;
   elapsedSeconds = 0;
@@ -90,10 +93,24 @@ export class PlaygroundPage implements OnDestroy {
       {text: 'End Game', data: {action: 'end'}, icon: 'medal'},
       {text: 'Cancel', role: 'cancel', data: {action: 'cancel'}, icon: 'close'}
     ];
+    this.visibilityChangeHandler = () => this.handleVisibilityChange();
+  }
+
+  async ngOnInit() {
+    await this.wakeLockService.acquire();
+    document.addEventListener('visibilitychange', this.visibilityChangeHandler);
   }
 
   ngOnDestroy() {
     clearInterval(this.timerIntervalCallback);
+    document.removeEventListener('visibilitychange', this.visibilityChangeHandler);
+    this.wakeLockService.release();
+  }
+
+  private async handleVisibilityChange() {
+    if (document.visibilityState === 'visible') {
+      await this.wakeLockService.acquire();
+    }
   }
 
   async rollDice(alchemyDice?: any) {
